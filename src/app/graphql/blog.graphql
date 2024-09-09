@@ -1,0 +1,25 @@
+query getBlogs {
+  blogs {
+    title
+    slug
+    tags {
+      key
+      value
+    }
+    author
+    published
+  }
+}
+
+query blogBySlug($slug: String!) {
+  blog(slug: $slug) {
+    slug
+    title
+    content
+    image
+    tags {
+      key
+      value
+    }
+  }
+}

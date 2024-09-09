@@ -3,9 +3,10 @@ import { startServerAndCreateNextHandler } from '@as-integrations/next';
 import "reflect-metadata";
 import { buildSchema } from 'type-graphql';
 import { DogsResolver } from '@/app/shema/dogs.resolver';
+import { BlogsResolver } from '@/app/shema/blogs.resolver';
 
 const schema = await buildSchema({
-    resolvers: [DogsResolver],
+    resolvers: [DogsResolver, BlogsResolver],
   });
 
 // Initialize Apollo Server

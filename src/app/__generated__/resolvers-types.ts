@@ -17,6 +17,17 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type Blog = {
+  __typename?: 'Blog';
+  author: Scalars['String']['output'];
+  content: Array<Scalars['String']['output']>;
+  image: Scalars['String']['output'];
+  published: Scalars['String']['output'];
+  slug: Scalars['ID']['output'];
+  tags: Array<TagAttribute>;
+  title: Scalars['String']['output'];
+};
+
 export type Dog = {
   __typename?: 'Dog';
   ageInWeeks: Scalars['Float']['output'];
@@ -40,8 +51,15 @@ export type DogAttribute = {
 
 export type Query = {
   __typename?: 'Query';
+  blog?: Maybe<Blog>;
+  blogs: Array<Blog>;
   dog?: Maybe<Dog>;
   dogs: Array<Dog>;
+};
+
+
+export type QueryBlogArgs = {
+  slug: Scalars['String']['input'];
 };
 
 
@@ -49,7 +67,41 @@ export type QueryDogArgs = {
   name: Scalars['String']['input'];
 };
 
+export type TagAttribute = {
+  __typename?: 'TagAttribute';
+  key: Scalars['ID']['output'];
+  value: Scalars['String']['output'];
+};
 
+
+export const GetBlogsDocument = gql`
+    query getBlogs {
+  blogs {
+    title
+    slug
+    tags {
+      key
+      value
+    }
+    author
+    published
+  }
+}
+    `;
+export const BlogBySlugDocument = gql`
+    query blogBySlug($slug: String!) {
+  blog(slug: $slug) {
+    slug
+    title
+    content
+    image
+    tags {
+      key
+      value
+    }
+  }
+}
+    `;
 export const GetDogsDocument = gql`
     query getDogs {
   dogs {
@@ -88,6 +140,12 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    getBlogs(variables?: GetBlogsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetBlogsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetBlogsQuery>(GetBlogsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getBlogs', 'query', variables);
+    },
+    blogBySlug(variables: BlogBySlugQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<BlogBySlugQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<BlogBySlugQuery>(BlogBySlugDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'blogBySlug', 'query', variables);
+    },
     getDogs(variables?: GetDogsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetDogsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetDogsQuery>(GetDogsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getDogs', 'query', variables);
     },
@@ -97,6 +155,18 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
+export type GetBlogsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetBlogsQuery = { __typename?: 'Query', blogs: Array<{ __typename?: 'Blog', title: string, slug: string, author: string, published: string, tags: Array<{ __typename?: 'TagAttribute', key: string, value: string }> }> };
+
+export type BlogBySlugQueryVariables = Exact<{
+  slug: Scalars['String']['input'];
+}>;
+
+
+export type BlogBySlugQuery = { __typename?: 'Query', blog?: { __typename?: 'Blog', slug: string, title: string, content: Array<string>, image: string, tags: Array<{ __typename?: 'TagAttribute', key: string, value: string }> } | null };
+
 export type GetDogsQueryVariables = Exact<{ [key: string]: never; }>;
 
 

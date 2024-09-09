@@ -1,13 +1,12 @@
-'use client'
+"use client";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { getDogs } from "../utils/api";
+import { client } from "../utils/api";
 
 const Posts = () => {
   const { data } = useSuspenseQuery({
     queryKey: ["dogs"],
-    queryFn: async () => await getDogs(),
+    queryFn: async () => await client.getBlogs(),
   });
-  console.log(data);
-  return data.dogs.map((item: { name: string }) => <p>{item.name}</p>);
+  return data?.blogs?.map((item) => <p key={item.slug}>{item.title}</p>);
 };
 export default Posts;
