@@ -4,15 +4,11 @@ import { ModeToggle } from "./mode-toggle";
 
 const HeaderComponent = () => {
   return (
-    <header className="container flex justify-between mx-auto">
-      <div className="social">
-        <a href="fb.com">facebook</a>
-        <a href="fb.com">facebook</a>
-        <a href="fb.com">facebook</a>
-        <a href="fb.com">facebook</a>
+    <header className="">
+      <div className="flex justify-center items-center mx-auto bg-destructive h-[60px] rounded-b-lg">
+        <Navbar />
+        <ModeToggle />
       </div>
-      <Navbar/>
-      <ModeToggle/>
     </header>
   );
 };

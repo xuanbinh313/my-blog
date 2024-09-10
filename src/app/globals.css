@@ -32,15 +32,15 @@
   }
 
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 222 15% 17%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 39 80% 56%;
+    --primary: 23 85% 47%;
     --primary-foreground: 240 5.9% 10%;
-    --destructive: 0 0% 98%;
+    --destructive: 222 18% 14%;
     --destructive-foreground: 240 5.9% 10%;
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;

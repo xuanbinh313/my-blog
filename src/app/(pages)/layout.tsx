@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background font-[family-name:var(--font-geist-sans)] container mx-auto`}
       >
         <Providers>
           <ThemeProvider
@@ -38,8 +38,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <HeaderComponent />
-            {children}
+            <div className="flex flex-col gap-y-7">
+              <HeaderComponent />
+              {children}
+            </div>
           </ThemeProvider>
         </Providers>
       </body>

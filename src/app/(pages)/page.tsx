@@ -1,11 +1,14 @@
 import Posts from "@/components/Posts";
+import { Button } from "@/components/ui/button";
+import { TypographyH2 } from "@/components/ui/typography";
 
 export default async function Home() {
   return (
     <>
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <h1>Main</h1>
+      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start bg-destructive rounded-lg px-10 py-7">
+        <TypographyH2>Projects</TypographyH2>
         <Posts />
+        <Button variant={"destructive"}>Test</Button>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         <h1>Footer</h1>
