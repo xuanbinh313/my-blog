@@ -2,11 +2,12 @@ import { ApolloServer } from '@apollo/server';
 import { startServerAndCreateNextHandler } from '@as-integrations/next';
 import "reflect-metadata";
 import { buildSchema } from 'type-graphql';
-import { DogsResolver } from '@/app/shema/dogs.resolver';
-import { BlogsResolver } from '@/app/shema/blogs.resolver';
+import { DogsResolver } from '@/app/schema/dogs.resolver';
+import { BlogsResolver } from '@/app/schema/blogs.resolver';
+import { HeadersResolver } from '@/app/schema/headers.resolver';
 
 const schema = await buildSchema({
-    resolvers: [DogsResolver, BlogsResolver],
+    resolvers: [DogsResolver, BlogsResolver, HeadersResolver],
   });
 
 // Initialize Apollo Server

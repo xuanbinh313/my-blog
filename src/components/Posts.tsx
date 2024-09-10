@@ -1,6 +1,6 @@
 "use client";
+import { client } from "@/app/utils/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { client } from "../utils/api";
 
 const Posts = () => {
   const { data } = useSuspenseQuery({

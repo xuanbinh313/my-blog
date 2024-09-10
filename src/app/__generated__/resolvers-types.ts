@@ -49,12 +49,20 @@ export type DogAttribute = {
   value: Scalars['String']['output'];
 };
 
+export type HeaderItem = {
+  __typename?: 'HeaderItem';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  slug: Scalars['ID']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
   blog?: Maybe<Blog>;
   blogs: Array<Blog>;
   dog?: Maybe<Dog>;
   dogs: Array<Dog>;
+  headers: Array<HeaderItem>;
 };
 
 
@@ -102,6 +110,14 @@ export const BlogBySlugDocument = gql`
   }
 }
     `;
+export const GetHeadersDocument = gql`
+    query getHeaders {
+  headers {
+    slug
+    name
+  }
+}
+    `;
 export const GetDogsDocument = gql`
     query getDogs {
   dogs {
@@ -146,6 +162,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     blogBySlug(variables: BlogBySlugQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<BlogBySlugQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<BlogBySlugQuery>(BlogBySlugDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'blogBySlug', 'query', variables);
     },
+    getHeaders(variables?: GetHeadersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetHeadersQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetHeadersQuery>(GetHeadersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getHeaders', 'query', variables);
+    },
     getDogs(variables?: GetDogsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetDogsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetDogsQuery>(GetDogsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getDogs', 'query', variables);
     },
@@ -166,6 +185,11 @@ export type BlogBySlugQueryVariables = Exact<{
 
 
 export type BlogBySlugQuery = { __typename?: 'Query', blog?: { __typename?: 'Blog', slug: string, title: string, content: Array<string>, image: string, tags: Array<{ __typename?: 'TagAttribute', key: string, value: string }> } | null };
+
+export type GetHeadersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetHeadersQuery = { __typename?: 'Query', headers: Array<{ __typename?: 'HeaderItem', slug: string, name: string }> };
 
 export type GetDogsQueryVariables = Exact<{ [key: string]: never; }>;
 

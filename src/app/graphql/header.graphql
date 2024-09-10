@@ -1,0 +1,6 @@
+query getHeaders {
+  headers {
+    slug
+    name
+  }
+}

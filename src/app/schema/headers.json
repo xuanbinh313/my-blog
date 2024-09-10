@@ -1,0 +1,17 @@
+[
+    {
+      "id": "01",
+      "name":"Homepage",
+      "slug": "/"
+    },
+    {
+      "id": "02",
+      "name":"Contact",
+      "slug": "/"
+    },
+    {
+      "id": "03",
+      "name":"About",
+      "slug": "/"
+    }
+  ]
