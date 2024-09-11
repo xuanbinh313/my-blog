@@ -8,7 +8,7 @@ export function Hero() {
         <figure className="flex flex-col gap-2">
           <img
             className="h-20 max-w-20 rounded-full object-cover mx-auto"
-            src="https://framerusercontent.com/images/pu2IWRFku4WAiY2wEU6XNj54VU.png"
+            src="https://framerusercontent.com/images/b5HcLGiq8nXy29HRuyCjLcs90.svg"
             alt="test"
           />
           <figcaption className="text-xs text-muted-foreground">
