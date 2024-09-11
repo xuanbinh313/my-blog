@@ -1,22 +1,50 @@
+import { ArticleComponent } from "@/components/article-component";
+import { CardBlog } from "@/components/blocks/card-blog";
+import CardProject from "@/components/blocks/card-project";
+import CardTool from "@/components/blocks/card-tool";
+import { Hero } from "@/components/blocks/hero";
 import Posts from "@/components/Posts";
 import { Button } from "@/components/ui/button";
-import { TypographyH2 } from "@/components/ui/typography";
-import dynamic from 'next/dynamic';
+import { H2, H3 } from "@/components/ui/typography";
+import dynamic from "next/dynamic";
 
-const RichtextEditor = dynamic( () => import( '@/components/richtext-editor' ), { ssr: false } );
+const RichtextEditor = dynamic(() => import("@/components/richtext-editor"), {
+  ssr: false,
+});
 export default async function Home() {
   return (
-    <>
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start bg-destructive rounded-lg px-10 py-7">
-        <TypographyH2>Projects</TypographyH2>
+    <main className="flex flex-col gap-7">
+      <div className="flex flex-col gap-5 row-start-2 items-center sm:items-start bg-destructive rounded-lg px-10 py-7 relative before:content-[' '] before:bg-pattern before:opacity-[0.03] before:bg-repeat before:top-0 before:bottom-0 before:left-0 before:right-0 before:absolute">
+        <Hero />
+      </div>
+      <ArticleComponent>
+        <H2 className="text-primary">Projects</H2>
+        <CardProject />
+        <CardProject />
+        <CardProject />
+      </ArticleComponent>
+      <ArticleComponent>
+        <H2 className="text-primary">Technical</H2>
+        <div className="grid grid-cols-3 gap-5 w-full">
+          <CardTool />
+          <CardTool />
+          <CardTool />
+          <CardTool />
+          <CardTool />
+        </div>
+      </ArticleComponent>
+      <ArticleComponent>
+        <H2 className="text-primary">Blogs</H2>
+        <CardBlog />
+        <CardBlog />
+        <CardBlog />
+        <CardBlog />
+      </ArticleComponent>
+      <div className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
+        <RichtextEditor />
         <Posts />
-        <Button variant={"destructive"}>Test</Button>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <RichtextEditor/>
-        <h1>Footer</h1>
-      </footer>
-    </>
+      </div>
+    </main>
   );
 }
 

@@ -15,14 +15,14 @@ const Navbar = () => {
       {headers.map((header) => (
         <Link
           key={header.slug}
-          className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+          className="text-foreground transition-colors hover:text-primary"
           href={header.slug}
         >
           {header.name}
         </Link>
       ))}
       <Link
-        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+        className="text-foreground transition-colors hover:text-primary"
         href={"/login "}
       >
         Login
