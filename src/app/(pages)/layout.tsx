@@ -29,8 +29,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background font-[family-name:var(--font-geist-sans)] container mx-auto`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background font-[family-name:var(--font-geist-sans)]`}
       >
+        <div className="absolute h-full top-0 left-0 right-0 bottom-0">
+          <div className="bg-pattern bg-repeat opacity-[0.03] w-full h-full"></div>
+        </div>
         <Providers>
           <ThemeProvider
             attribute="class"
@@ -38,7 +41,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="flex flex-col gap-y-7">
+            <div className="flex flex-col gap-y-7 max-w-4xl mx-auto">
               <HeaderComponent />
               {children}
             </div>

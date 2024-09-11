@@ -4,6 +4,8 @@
 
 @layer base {
   :root {
+    /* --ck-color-base-background: 35 49% 93% !important;
+    --ck-color-base-foreground: 240 10% 3.9% !important; */
     --background: 35 49% 93%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;

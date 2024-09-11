@@ -1,7 +1,9 @@
 import Posts from "@/components/Posts";
 import { Button } from "@/components/ui/button";
 import { TypographyH2 } from "@/components/ui/typography";
+import dynamic from 'next/dynamic';
 
+const RichtextEditor = dynamic( () => import( '@/components/richtext-editor' ), { ssr: false } );
 export default async function Home() {
   return (
     <>
@@ -11,6 +13,7 @@ export default async function Home() {
         <Button variant={"destructive"}>Test</Button>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
+        <RichtextEditor/>
         <h1>Footer</h1>
       </footer>
     </>

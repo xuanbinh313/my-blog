@@ -35,5 +35,7 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 [link UI](https://stabraq.framer.website/)
+
 [link UI](https://sawad.framer.website/)
+
 [Figma](https://framer.com/projects/Stabraq-copy--3rKBIzmBZMbwreM1wbHj-7dBn1)
