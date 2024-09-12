@@ -40,7 +40,7 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <div className="flex flex-col gap-y-7 max-w-4xl mx-auto">
+              <div className="flex flex-col gap-y-7 max-w-3xl mx-auto">
                 <HeaderComponent />
                 {children}
                 <FooterComponent />
