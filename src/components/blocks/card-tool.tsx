@@ -1,8 +1,5 @@
-import React from "react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
-import { H2, H3 } from "../ui/typography";
+import { H3 } from "../ui/typography";
 const CardTool = () => {
   return (
     <Card className="w-full border-0 relative p-5">

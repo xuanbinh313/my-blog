@@ -1,6 +1,6 @@
 import { ObjectType, Field, ID } from "type-graphql";
 
-@ObjectType()
+@ObjectType('HeaderItem')
 export class HeaderItem {
   @Field(() => ID)
   id!: string;

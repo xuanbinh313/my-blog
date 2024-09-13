@@ -20,6 +20,10 @@ function RichtextEditor() {
   return (
     <div className="w-full bg-white text-black">
       <CKEditor
+        onChange={(event, editor) => {
+          console.log({ event, editor: editor.isReadOnly });
+        }}
+        
         editor={ClassicEditor}
         config={{
           toolbar: {
@@ -63,9 +67,6 @@ function RichtextEditor() {
             Heading,
             Link,
           ],
-          mention: {
-            // Mention configuration
-          },
           initialData: "<p>Hello from CKEditor 5 in React!</p>",
         }}
       />

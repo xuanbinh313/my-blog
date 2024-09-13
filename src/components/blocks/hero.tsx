@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
 import { H1 } from "../ui/typography";
 export function Hero() {
   return (
@@ -17,7 +15,7 @@ export function Hero() {
         </figure>
         <H1>BinhCoDev</H1>
         <p className="text-muted-foreground">
-          Hi, I'm Christopher, a creative Web Designer who loves to craft
+          Hi, I&apos;m Christopher, a creative Web Designer who loves to craft
           visually stunning websites.
         </p>
       </div>

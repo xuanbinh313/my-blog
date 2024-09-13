@@ -1,8 +1,6 @@
-import React from "react";
-import { H1 } from "../ui/typography";
-import { Card } from "../ui/card";
-import BackgroundComponent from "../background-component";
 import { ArticleComponent } from "../article-component";
+import BackgroundComponent from "../background-component";
+import { H1 } from "../ui/typography";
 
 const HeroNoImage = () => {
   return (

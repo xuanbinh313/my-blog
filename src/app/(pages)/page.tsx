@@ -7,8 +7,7 @@ import { ContactForm } from "@/components/blocks/contact-form";
 import { Hero } from "@/components/blocks/hero";
 import HeroNoImage from "@/components/blocks/hero-no-image";
 import Posts from "@/components/Posts";
-import { Button } from "@/components/ui/button";
-import { H2, H3 } from "@/components/ui/typography";
+import { H2 } from "@/components/ui/typography";
 import dynamic from "next/dynamic";
 
 const RichtextEditor = dynamic(() => import("@/components/richtext-editor"), {

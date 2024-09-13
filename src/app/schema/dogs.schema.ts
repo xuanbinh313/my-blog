@@ -1,6 +1,6 @@
 import { ObjectType, Field, ID } from "type-graphql";
 
-@ObjectType()
+@ObjectType('DogAttribute')
 export class DogAttribute {
   @Field(() => ID)
   key!: string;
@@ -9,7 +9,7 @@ export class DogAttribute {
   value!: string;
 }
 
-@ObjectType()
+@ObjectType('Dog')
 export class Dog {
   @Field(() => ID)
   name!: string;

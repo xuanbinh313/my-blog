@@ -1,4 +1,4 @@
-import { Resolver, Query, Arg } from "type-graphql";
+import { Query, Resolver } from "type-graphql";
 
 import headers from "./headers.json";
 import { HeaderItem } from "./headers.schema";

@@ -1,9 +1,9 @@
 "use client";
 import { client } from "@/app/utils/api";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 
 const Posts = () => {
-  const { data } = useSuspenseQuery({
+  const { data } = useQuery({
     queryKey: ["dogs"],
     queryFn: async () => await client.getBlogs(),
   });
