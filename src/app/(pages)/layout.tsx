@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "../globals.css";
-import Providers from "../providers";
-import HeaderComponent from "../../components/header";
 import { ThemeProvider } from "@/components/theme-provider";
-import FooterComponent from "@/components/footer-component";
+import Providers from "../providers";
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
@@ -40,16 +38,9 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <div className="flex flex-col gap-y-7 max-w-3xl mx-auto">
-                <HeaderComponent />
                 {children}
-                <FooterComponent />
-              </div>
             </ThemeProvider>
           </Providers>
-          <div className="absolute h-full top-0 left-0 right-0 bottom-0 z-[-1]">
-            <div className="bg-pattern bg-repeat opacity-[0.03] w-full h-full" />
-          </div>
         </div>
       </body>
     </html>
