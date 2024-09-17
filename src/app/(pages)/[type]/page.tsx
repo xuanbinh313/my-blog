@@ -1,34 +1,36 @@
-import { ArticleComponent } from "@/components/article-component";
+import { getQueryClient } from "@/app/get-query-client";
+import { client } from "@/app/utils/api";
 import BackgroundComponent from "@/components/background-component";
-import { CardBlog } from "@/components/blocks/card-blog";
+import Block from "@/components/blocks/block";
 import CardProject from "@/components/blocks/card-project";
-import CardTool from "@/components/blocks/card-tool";
-import { ContactForm } from "@/components/blocks/contact-form";
 import { Hero } from "@/components/blocks/hero";
 import HeroNoImage from "@/components/blocks/hero-no-image";
-import Posts from "@/components/Posts";
-import { H2 } from "@/components/ui/typography";
 import dynamic from "next/dynamic";
 
-const RichtextEditor = dynamic(() => import("@/components/richtext-editor"), {
+const RichTextEditor = dynamic(() => import("@/components/richtext-editor"), {
   ssr: false,
 });
-export default async function Home() {
+const BlockComponents = {
+  projects: CardProject,
+};
+export default async function Home({ params }) {
+  const queryClient = getQueryClient();
+  const { page } = await queryClient.fetchQuery({
+    queryKey: ["page"],
+    queryFn: async () => client.getPage({ slug: params.type }),
+  });
+  const hero = page?.hero;
+  const blocks = page?.blocks;
   return (
     <main className="flex flex-col gap-7">
       <div className="bg-destructive rounded-lg px-10 py-7 relative ">
         <BackgroundComponent />
-        <Hero />
+        <Hero data={hero} />
       </div>
       <HeroNoImage />
-      <ArticleComponent>
-        <BackgroundComponent />
-        <H2 className="text-primary">Projects</H2>
-        <CardProject />
-        <CardProject />
-        <CardProject />
-      </ArticleComponent>
-      <ArticleComponent>
+      <Block blocks={blocks} />
+
+      {/* <ArticleComponent>
         <BackgroundComponent />
         <H2 className="text-primary">Technical</H2>
         <div className="grid grid-cols-3 gap-5 w-full">
@@ -49,12 +51,12 @@ export default async function Home() {
       </ArticleComponent>
       <ArticleComponent>
         <BackgroundComponent />
-        <ContactForm/>
+        <ContactForm />
       </ArticleComponent>
       <div className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <RichtextEditor />
+        <RichTextEditor />
         <Posts />
-      </div>
+      </div> */}
     </main>
   );
 }

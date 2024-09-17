@@ -1,77 +1,22 @@
-// components/custom-editor.js
-"use client"; // only in App Router
+"use client";
 
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import {
-  ClassicEditor,
-  Bold,
-  Essentials,
-  Italic,
-  Mention,
-  Paragraph,
-  Undo,
-  Heading,
-  Link
-} from "ckeditor5";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Typography from "@tiptap/extension-typography";
+import Highlight from "@tiptap/extension-highlight";
 
-import "ckeditor5/ckeditor5.css";
+const RichTextEditor = () => {
+  const editor = useEditor({
+    extensions: [StarterKit],
+    editorProps: {
+      attributes: {
+        class: 'prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl m-5 focus:outline-none prose-h1:font-light',
+      },
+    },
+    content: "<h1>Hello World! 🌎️</h1>",
+  });
 
-function RichtextEditor() {
-  return (
-    <div className="w-full bg-white text-black">
-      <CKEditor
-        onChange={(event, editor) => {
-          console.log({ event, editor: editor.isReadOnly });
-        }}
-        
-        editor={ClassicEditor}
-        config={{
-          toolbar: {
-            items: [
-              "undo",
-              "redo",
-              "|",
-              "heading",
-              "|",
-              "fontfamily",
-              "fontsize",
-              "fontColor",
-              "fontBackgroundColor",
-              "|",
-              "bold",
-              "italic",
-              "strikethrough",
-              "subscript",
-              "superscript",
-              "code",
-              "|",
-              "link",
-              "uploadImage",
-              "blockQuote",
-              "codeBlock",
-              "|",
-              "bulletedList",
-              "numberedList",
-              "todoList",
-              "outdent",
-              "indent",
-            ],
-          },
-          plugins: [
-            Bold,
-            Essentials,
-            Italic,
-            Mention,
-            Paragraph,
-            Undo,
-            Heading,
-            Link,
-          ],
-          initialData: "<p>Hello from CKEditor 5 in React!</p>",
-        }}
-      />
-    </div>
-  );
-}
+  return <EditorContent editor={editor} />;
+};
 
-export default RichtextEditor;
+export default RichTextEditor;

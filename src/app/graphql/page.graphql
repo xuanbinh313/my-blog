@@ -1,0 +1,18 @@
+query getPage($slug: String!) {
+  page(slug: $slug) {
+    slug
+    title
+    hero {
+        type
+        image
+        title
+        subtitle
+        content
+    }
+    blocks {
+      name
+      value
+      type
+    }
+  }
+}

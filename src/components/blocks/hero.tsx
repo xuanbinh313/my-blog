@@ -1,23 +1,30 @@
+import type { Hero as HeroType } from "@/app/__generated__/resolvers-types";
 import { H1 } from "../ui/typography";
-export function Hero() {
+import Image from "next/image";
+
+interface HeroProps {
+  data?: HeroType;
+}
+export function Hero({ data }: HeroProps) {
   return (
     <div className="w-full border-0 relative p-5">
       <div className="flex flex-col gap-4 text-center max-w-lg mx-auto">
         <figure className="flex flex-col gap-2">
-          <img
-            className="h-20 max-w-20 rounded-full object-cover mx-auto"
-            src="https://framerusercontent.com/images/b5HcLGiq8nXy29HRuyCjLcs90.svg"
-            alt="test"
-          />
+          {data?.image && (
+            <Image
+              className="rounded-full object-cover mx-auto"
+              src={data?.image}
+              alt="test"
+              width={80}
+              height={80}
+            />
+          )}
           <figcaption className="text-xs text-muted-foreground">
-            @xuanbinh313
+            {data?.subtitle}
           </figcaption>
         </figure>
-        <H1>BinhCoDev</H1>
-        <p className="text-muted-foreground">
-          Hi, I&apos;m Christopher, a creative Web Designer who loves to craft
-          visually stunning websites.
-        </p>
+        <H1>{data?.title}</H1>
+        <p className="text-muted-foreground">{data?.content}</p>
       </div>
     </div>
   );

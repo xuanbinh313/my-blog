@@ -17,6 +17,13 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type Block = {
+  __typename?: 'Block';
+  name: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  value: Scalars['ID']['output'];
+};
+
 export type Blog = {
   __typename?: 'Blog';
   author: Scalars['String']['output'];
@@ -56,6 +63,27 @@ export type HeaderItem = {
   slug: Scalars['ID']['output'];
 };
 
+export type Hero = {
+  __typename?: 'Hero';
+  content: Scalars['String']['output'];
+  image: Scalars['String']['output'];
+  subtitle: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  type: Scalars['ID']['output'];
+};
+
+export type Page = {
+  __typename?: 'Page';
+  blocks: Array<Block>;
+  createdDate: Scalars['String']['output'];
+  hero: Hero;
+  id: Scalars['ID']['output'];
+  published: Scalars['Boolean']['output'];
+  slug: Scalars['ID']['output'];
+  title: Scalars['String']['output'];
+  updatedDate: Scalars['String']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
   blog?: Maybe<Blog>;
@@ -63,6 +91,8 @@ export type Query = {
   dog?: Maybe<Dog>;
   dogs: Array<Dog>;
   headers: Array<HeaderItem>;
+  page?: Maybe<Page>;
+  pages: Array<Page>;
 };
 
 
@@ -73,6 +103,11 @@ export type QueryBlogArgs = {
 
 export type QueryDogArgs = {
   name: Scalars['String']['input'];
+};
+
+
+export type QueryPageArgs = {
+  slug: Scalars['String']['input'];
 };
 
 export type TagAttribute = {
@@ -115,6 +150,26 @@ export const GetHeadersDocument = gql`
   headers {
     slug
     name
+  }
+}
+    `;
+export const GetPageDocument = gql`
+    query getPage($slug: String!) {
+  page(slug: $slug) {
+    slug
+    title
+    hero {
+      type
+      image
+      title
+      subtitle
+      content
+    }
+    blocks {
+      name
+      value
+      type
+    }
   }
 }
     `;
@@ -165,6 +220,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     getHeaders(variables?: GetHeadersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetHeadersQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetHeadersQuery>(GetHeadersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getHeaders', 'query', variables);
     },
+    getPage(variables: GetPageQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetPageQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetPageQuery>(GetPageDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getPage', 'query', variables);
+    },
     getDogs(variables?: GetDogsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetDogsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetDogsQuery>(GetDogsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getDogs', 'query', variables);
     },
@@ -190,6 +248,13 @@ export type GetHeadersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetHeadersQuery = { __typename?: 'Query', headers: Array<{ __typename?: 'HeaderItem', slug: string, name: string }> };
+
+export type GetPageQueryVariables = Exact<{
+  slug: Scalars['String']['input'];
+}>;
+
+
+export type GetPageQuery = { __typename?: 'Query', page?: { __typename?: 'Page', slug: string, title: string, hero: { __typename?: 'Hero', type: string, image: string, title: string, subtitle: string, content: string }, blocks: Array<{ __typename?: 'Block', name: string, value: string, type: string }> } | null };
 
 export type GetDogsQueryVariables = Exact<{ [key: string]: never; }>;
 
