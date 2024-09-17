@@ -2,26 +2,26 @@
 
 import { Button } from "@/components/ui/button";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import loginUser from "../actions";
 
 const FormSchema = z.object({
   email: z.string().email({
@@ -31,7 +31,10 @@ const FormSchema = z.object({
     message: "Password must be at least 6 characters.",
   }),
 });
-export default function LoginForm({ loginUser }) {
+const initialState = {
+  message: '',
+}
+export default function LoginForm() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -66,13 +69,10 @@ export default function LoginForm({ loginUser }) {
                       <Input
                         className="rounded-xl px-4 py-5"
                         placeholder="b@example.com"
-                        type="email"
+                        type="text"
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>
-                      This is your public display name.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -93,8 +93,7 @@ export default function LoginForm({ loginUser }) {
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription>This is your password.</FormDescription>
-                    <FormMessage />
+                    <FormMessage/>
                   </FormItem>
                 )}
               />

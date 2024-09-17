@@ -8,13 +8,16 @@
     "start": "next start",
     "lint": "next lint",
     "generate": "graphql-codegen --config codegen.yml",
-    "compile": "generate && tsc"
+    "compile": "generate && tsc",
+    "dbgenerate": "drizzle-kit generate",
+    "dbpush": "drizzle-kit push"
   },
   "dependencies": {
     "@apollo/server": "^4.11.0",
     "@as-integrations/next": "^3.1.0",
     "@faker-js/faker": "^9.0.1",
     "@hookform/resolvers": "^3.9.0",
+    "@neondatabase/serverless": "^0.9.5",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.1",
@@ -40,6 +43,7 @@
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
     "date-fns": "^4.0.0-beta.1",
+    "drizzle-orm": "^0.33.0",
     "graphql": "^16.9.0",
     "graphql-scalars": "^1.23.0",
     "lucide-react": "^0.439.0",
@@ -69,6 +73,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "drizzle-kit": "^0.24.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.8",
     "postcss": "^8",

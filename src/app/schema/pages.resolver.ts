@@ -2,6 +2,7 @@ import { Resolver, Query, Arg } from "type-graphql";
 
 import pages from "./pages.json";
 import { Page } from "./pages.schema";
+import { db } from "@/db/drizzle";
 
 @Resolver(Page)
 export class PagesResolver {

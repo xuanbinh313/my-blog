@@ -7,9 +7,16 @@ import { DogsResolver } from "@/app/schema/dogs.resolver";
 import { BlogsResolver } from "@/app/schema/blogs.resolver";
 import { HeadersResolver } from "@/app/schema/headers.resolver";
 import { PagesResolver } from "@/app/schema/pages.resolver";
+import { ProjectsResolver } from "@/app/schema/projects.resolver";
 
 const schema = await buildSchema({
-  resolvers: [DogsResolver, BlogsResolver, HeadersResolver, PagesResolver],
+  resolvers: [
+    DogsResolver,
+    BlogsResolver,
+    HeadersResolver,
+    PagesResolver,
+    ProjectsResolver,
+  ],
 });
 
 // Initialize Apollo Server
@@ -29,7 +36,6 @@ const apolloServer = new ApolloServer({
     //         `Variables: ${JSON.stringify(requestContext.request.variables)}`
     //       );
     //     }
-
     //     return {
     //       async willSendResponse(responseContext) {
     //         // Log the response
