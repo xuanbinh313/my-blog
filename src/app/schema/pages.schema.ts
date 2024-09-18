@@ -4,7 +4,7 @@ import { ObjectType, Field, ID } from "type-graphql";
 export class Block {
   @Field(() => ID)
   value!: string;
-  
+
   @Field(() => String)
   type!: string;
 
@@ -24,10 +24,10 @@ export class Hero {
   title!: string;
 
   @Field(() => String)
-  subtitle!: string;
+  subtitle: string | null = null;
 
   @Field(() => String)
-  content!: string;
+  content: string | null = null;
 }
 
 @ObjectType("Page")
@@ -48,10 +48,10 @@ export class Page {
   blocks!: Block[];
 
   @Field(() => String)
-  createdDate!: string;
+  createdDate!: Date;
 
   @Field(() => String)
-  updatedDate!: string;
+  updatedDate!: Date;
 
   @Field(() => Boolean)
   published: Boolean = false;

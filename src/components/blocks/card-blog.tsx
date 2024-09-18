@@ -5,7 +5,11 @@ import { Card } from "@/components/ui/card";
 import { ChevronRight } from "lucide-react";
 import { H3 } from "../ui/typography";
 
-export function CardBlog({ title }) {
+interface CardBlogProps {
+  title: string;
+}
+
+export function CardBlog({ title }: CardBlogProps) {
   return (
     <Card className="w-full border-0 relative p-5">
       <div className="flex justify-between items-center gap-8">

@@ -13,11 +13,15 @@ const RichTextEditor = dynamic(() => import("@/components/richtext-editor"), {
 const BlockComponents = {
   projects: CardProject,
 };
-export default async function Home({ params }) {
+interface Params {
+  type: string;
+}
+
+export default async function Home({ params }: { params: Params }) {
   const queryClient = getQueryClient();
-  const { page } = await queryClient.fetchQuery({
+  const page = await queryClient.fetchQuery({
     queryKey: ["page"],
-    queryFn: async () => client.getPage({ slug: params.type }),
+    queryFn: async () => (await client.getPage({ slug: params.type })).page,
   });
   const hero = page?.hero;
   const blocks = page?.blocks;
