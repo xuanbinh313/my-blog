@@ -8,6 +8,7 @@ import { BlogsResolver } from "@/app/schema/blogs.resolver";
 import { HeadersResolver } from "@/app/schema/headers.resolver";
 import { PagesResolver } from "@/app/schema/pages.resolver";
 import { ProjectsResolver } from "@/app/schema/projects.resolver";
+import { TagsResolver } from "@/app/schema/tags.resolver";
 
 const schema = await buildSchema({
   resolvers: [
@@ -16,6 +17,7 @@ const schema = await buildSchema({
     HeadersResolver,
     PagesResolver,
     ProjectsResolver,
+    TagsResolver,
   ],
 });
 
@@ -44,8 +46,8 @@ const apolloServer = new ApolloServer({
               logger.error(
                 `GraphQL Errors: ${JSON.stringify(responseContext.errors)}`
               );
-            } 
-            
+            }
+
             // else {
             //   logger.info(
             //     `GraphQL Response: ${JSON.stringify(

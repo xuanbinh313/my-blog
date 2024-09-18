@@ -31,7 +31,7 @@ export default async function Home({ params }: { params: Params }) {
         <BackgroundComponent />
         <Hero data={hero} />
       </div>
-      <HeroNoImage />
+      {/* <HeroNoImage /> */}
       <Block blocks={blocks} />
 
       {/* <ArticleComponent>

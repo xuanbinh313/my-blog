@@ -24,6 +24,13 @@ export type Block = {
   value: Scalars['ID']['output'];
 };
 
+export type BlockProject = {
+  __typename?: 'BlockProject';
+  name: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  value: Scalars['ID']['output'];
+};
+
 export type Blog = {
   __typename?: 'Blog';
   author: Scalars['String']['output'];
@@ -72,11 +79,32 @@ export type Hero = {
   type: Scalars['ID']['output'];
 };
 
+export type HeroProject = {
+  __typename?: 'HeroProject';
+  content: Scalars['String']['output'];
+  image: Scalars['String']['output'];
+  subtitle: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  type: Scalars['ID']['output'];
+};
+
 export type Page = {
   __typename?: 'Page';
   blocks: Array<Block>;
   createdDate: Scalars['String']['output'];
   hero: Hero;
+  id: Scalars['ID']['output'];
+  published: Scalars['Boolean']['output'];
+  slug: Scalars['ID']['output'];
+  title: Scalars['String']['output'];
+  updatedDate: Scalars['String']['output'];
+};
+
+export type Project = {
+  __typename?: 'Project';
+  blocks: Array<BlockProject>;
+  createdDate: Scalars['String']['output'];
+  hero: HeroProject;
   id: Scalars['ID']['output'];
   published: Scalars['Boolean']['output'];
   slug: Scalars['ID']['output'];
@@ -93,6 +121,10 @@ export type Query = {
   headers: Array<HeaderItem>;
   page?: Maybe<Page>;
   pages: Array<Page>;
+  project?: Maybe<Project>;
+  projects: Array<Project>;
+  tag?: Maybe<Tag>;
+  tags: Array<Tag>;
 };
 
 
@@ -108,6 +140,25 @@ export type QueryDogArgs = {
 
 export type QueryPageArgs = {
   slug: Scalars['String']['input'];
+};
+
+
+export type QueryProjectArgs = {
+  slug: Scalars['String']['input'];
+};
+
+
+export type QueryTagArgs = {
+  slug: Scalars['String']['input'];
+};
+
+export type Tag = {
+  __typename?: 'Tag';
+  content: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  image: Scalars['String']['output'];
+  slug: Scalars['ID']['output'];
+  title: Scalars['String']['output'];
 };
 
 export type TagAttribute = {
@@ -173,6 +224,26 @@ export const GetPageDocument = gql`
   }
 }
     `;
+export const GetProjectDocument = gql`
+    query getProject($slug: String!) {
+  project(slug: $slug) {
+    slug
+    title
+    hero {
+      type
+      image
+      title
+      subtitle
+      content
+    }
+    blocks {
+      name
+      value
+      type
+    }
+  }
+}
+    `;
 export const GetDogsDocument = gql`
     query getDogs {
   dogs {
@@ -203,6 +274,28 @@ export const DogByNameDocument = gql`
   }
 }
     `;
+export const GetTagsDocument = gql`
+    query getTags {
+  tags {
+    id
+    slug
+    title
+    image
+    content
+  }
+}
+    `;
+export const GetTagDocument = gql`
+    query getTag($slug: String!) {
+  tag(slug: $slug) {
+    id
+    slug
+    title
+    image
+    content
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string, operationType?: string, variables?: any) => Promise<T>;
 
@@ -223,11 +316,20 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     getPage(variables: GetPageQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetPageQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetPageQuery>(GetPageDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getPage', 'query', variables);
     },
+    getProject(variables: GetProjectQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetProjectQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetProjectQuery>(GetProjectDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getProject', 'query', variables);
+    },
     getDogs(variables?: GetDogsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetDogsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetDogsQuery>(GetDogsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getDogs', 'query', variables);
     },
     dogByName(variables: DogByNameQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<DogByNameQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<DogByNameQuery>(DogByNameDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'dogByName', 'query', variables);
+    },
+    getTags(variables?: GetTagsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetTagsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetTagsQuery>(GetTagsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getTags', 'query', variables);
+    },
+    getTag(variables: GetTagQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetTagQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetTagQuery>(GetTagDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getTag', 'query', variables);
     }
   };
 }
@@ -256,6 +358,13 @@ export type GetPageQueryVariables = Exact<{
 
 export type GetPageQuery = { __typename?: 'Query', page?: { __typename?: 'Page', slug: string, title: string, hero: { __typename?: 'Hero', type: string, image: string, title: string, subtitle: string, content: string }, blocks: Array<{ __typename?: 'Block', name: string, value: string, type: string }> } | null };
 
+export type GetProjectQueryVariables = Exact<{
+  slug: Scalars['String']['input'];
+}>;
+
+
+export type GetProjectQuery = { __typename?: 'Query', project?: { __typename?: 'Project', slug: string, title: string, hero: { __typename?: 'HeroProject', type: string, image: string, title: string, subtitle: string, content: string }, blocks: Array<{ __typename?: 'BlockProject', name: string, value: string, type: string }> } | null };
+
 export type GetDogsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -267,3 +376,15 @@ export type DogByNameQueryVariables = Exact<{
 
 
 export type DogByNameQuery = { __typename?: 'Query', dog?: { __typename?: 'Dog', name: string, breed: string, ageInWeeks: number, image: string, sex: string, description: Array<string>, color: string, attributes: Array<{ __typename?: 'DogAttribute', key: string, value: string }> } | null };
+
+export type GetTagsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTagsQuery = { __typename?: 'Query', tags: Array<{ __typename?: 'Tag', id: string, slug: string, title: string, image: string, content: string }> };
+
+export type GetTagQueryVariables = Exact<{
+  slug: Scalars['String']['input'];
+}>;
+
+
+export type GetTagQuery = { __typename?: 'Query', tag?: { __typename?: 'Tag', id: string, slug: string, title: string, image: string, content: string } | null };

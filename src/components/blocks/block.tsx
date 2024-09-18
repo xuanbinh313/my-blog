@@ -6,11 +6,13 @@ import { H2 } from "../ui/typography";
 import { BlogList } from "./card-blog";
 import CardProject from "./card-project";
 import { ContactForm } from "./contact-form";
+import { ToolList } from "./card-tool";
 
 const type: { [key: string]: React.ComponentType<any> } = {
   blogs: BlogList,
   project: CardProject,
   cta: ContactForm,
+  tags: ToolList
 };
 
 interface BlockProps {
