@@ -20,7 +20,7 @@ export default function CMSLayout({
             <FooterComponent />
           </div>
           <div className="absolute h-full top-0 left-0 right-0 bottom-0 z-[-1]">
-            <div className="bg-pattern bg-repeat opacity-[0.03] w-full h-full" />
+            <div className="bg-pattern bg-repeat opacity-[0.03] w-full h-full bg-[length:161px]" />
           </div>
     </>
   );

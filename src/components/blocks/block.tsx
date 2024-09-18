@@ -12,7 +12,7 @@ const type: { [key: string]: React.ComponentType<any> } = {
   blogs: BlogList,
   project: CardProject,
   cta: ContactForm,
-  tags: ToolList
+  tags: ToolList,
 };
 
 interface BlockProps {

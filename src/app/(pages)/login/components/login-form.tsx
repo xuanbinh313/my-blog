@@ -65,7 +65,7 @@ export default function LoginForm() {
                     <FormLabel className="text-muted-foreground">
                       Email
                     </FormLabel>
-                    <FormControl className="bg-zinc-700">
+                    <FormControl className="dark:bg-zinc-700 bg-secondary">
                       <Input
                         className="rounded-xl px-4 py-5"
                         placeholder="b@example.com"
@@ -85,7 +85,7 @@ export default function LoginForm() {
                     <FormLabel className="text-muted-foreground">
                       Password
                     </FormLabel>
-                    <FormControl className="bg-zinc-700">
+                    <FormControl className="dark:bg-zinc-700 bg-secondary">
                       <Input
                         className="rounded-xl px-4 py-5"
                         placeholder="Password"

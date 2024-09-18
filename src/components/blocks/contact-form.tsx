@@ -63,7 +63,7 @@ export function ContactForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-muted-foreground">Name</FormLabel>
-              <FormControl className="bg-zinc-700">
+              <FormControl className="dark:bg-zinc-700 bg-secondary">
                 <Input
                   className="rounded-xl px-4 py-5"
                   placeholder="shadcn"
@@ -83,7 +83,7 @@ export function ContactForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-muted-foreground">Email</FormLabel>
-              <FormControl className="bg-zinc-700">
+              <FormControl className="dark:bg-zinc-700 bg-secondary">
                 <Input
                   className="rounded-xl px-4 py-5"
                   placeholder="shadcn"
@@ -103,7 +103,7 @@ export function ContactForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-muted-foreground">Message</FormLabel>
-              <FormControl className="bg-zinc-700">
+              <FormControl className="dark:bg-zinc-700 bg-secondary">
                 <Textarea
                   className="rounded-xl px-4 py-5"
                   placeholder="shadcn"
