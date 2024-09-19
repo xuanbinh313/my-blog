@@ -14,14 +14,14 @@ export default function CMSLayout({
 }>) {
   return (
     <>
-    <div className="flex flex-col gap-y-7 max-w-3xl mx-auto">
-            <HeaderComponent />
-            {children}
-            <FooterComponent />
-          </div>
-          <div className="absolute h-full top-0 left-0 right-0 bottom-0 z-[-1]">
-            <div className="bg-pattern bg-repeat opacity-[0.03] w-full h-full bg-[length:161px]" />
-          </div>
+      <div className="flex flex-col gap-y-7 max-w-3xl mx-auto">
+        <HeaderComponent />
+        {children}
+        <FooterComponent />
+      </div>
+      <div className="absolute h-full top-0 left-0 right-0 bottom-0 z-[-1]">
+        <div className="bg-pattern bg-repeat opacity-[0.03] w-full h-full bg-[length:161px]" />
+      </div>
     </>
   );
 }

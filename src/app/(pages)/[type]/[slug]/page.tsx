@@ -1,9 +1,7 @@
-import { useParams } from "next/navigation";
-import React from "react";
+import RichTextEditor from "@/components/richtext-editor";
 
 const CMSDetailPage = () => {
-  const params = useParams<{ type: string; slug: string }>();
-  return <div>CMSDetailPage {params.slug} - {params.type}</div>;
+  return <RichTextEditor />;
 };
 
 export default CMSDetailPage;

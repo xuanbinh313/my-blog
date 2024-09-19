@@ -33,12 +33,9 @@ export default async function Home({ params }: { params: Params }) {
       </div>
       <Block blocks={blocks} />
 
-      {/* <div className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <RichTextEditor />
-         <HeroNoImage />
-        <Posts />
-      </div> */}
+      <div className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
+        <HeroNoImage />
+      </div>
     </main>
   );
 }
-
