@@ -9,8 +9,8 @@
     "lint": "next lint",
     "generate": "graphql-codegen --config codegen.yml",
     "compile": "generate && tsc",
-    "dbgenerate": "drizzle-kit generate",
-    "dbpush": "drizzle-kit push",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
     "db:seed": "tsx src/db/seeds/index.ts"
   },
   "dependencies": {

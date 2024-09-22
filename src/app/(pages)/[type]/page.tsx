@@ -32,7 +32,6 @@ export default async function Home({ params }: { params: Params }) {
         <Hero data={hero} />
       </div>
       <Block blocks={blocks} />
-
       <div className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         <HeroNoImage />
       </div>

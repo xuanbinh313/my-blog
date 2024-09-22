@@ -1,12 +1,13 @@
 query getBlogs {
   blogs {
+    image
     title
     slug
+    content
     tags {
-      key
-      value
+      slug
+      title
     }
-    author
     published
   }
 }
@@ -18,8 +19,8 @@ query blogBySlug($slug: String!) {
     content
     image
     tags {
-      key
-      value
+      slug
+      title
     }
   }
 }

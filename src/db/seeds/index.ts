@@ -2,6 +2,7 @@ import { db } from "../drizzle";
 import {
   blocks,
   blogs,
+  blogTags,
   heros,
   pageBlocks,
   pages,
@@ -12,19 +13,21 @@ import {
 async function seed() {
   try {
     // Clear existing data
+    await db.delete(pageBlocks);
+    await db.delete(blogTags);
     await db.delete(users);
+    await db.delete(pages);
     await db.delete(heros);
     await db.delete(blocks);
     await db.delete(blogs);
     await db.delete(techs);
-    await db.delete(pages);
-    await db.delete(pageBlocks);
 
     // Seed users
-    await db.insert(users).values([
-      { name: "Alice", email: "alice@example.com", image: "alice.jpg" },
-      { name: "Bob", email: "bob@example.com", image: "bob.jpg" },
-    ]);
+    await db
+      .insert(users)
+      .values([
+        { name: "admin", email: "admin@example.com", image: "avatar1.png" },
+      ]);
 
     // Seed heros
     const heroIds = await db
@@ -61,38 +64,56 @@ async function seed() {
       .returning({ id: blocks.id });
 
     // Seed blogs
-    await db.insert(blogs).values([
-      {
-        slug: "first-post",
-        title: "First Blog Post",
-        image: "https://framerusercontent.com/images/b5HcLGiq8nXy29HRuyCjLcs90.svg",
-        content: "This is the first blog post.",
-        published: true,
-      },
-      {
-        slug: "second-post",
-        title: "Second Blog Post",
-        image: "https://framerusercontent.com/images/b5HcLGiq8nXy29HRuyCjLcs90.svg",
-        content: "This is the second blog post.",
-        published: false,
-      },
-    ]);
+    const blogsIds = await db
+      .insert(blogs)
+      .values([
+        {
+          slug: "first-post",
+          title: "First Blog Post",
+          image: "bg1.jpeg",
+          content: "This is the first blog post.",
+          published: true,
+        },
+        {
+          slug: "second-post",
+          title: "Second Blog Post",
+          image: "bg2.png",
+          content: "This is the second blog post.",
+          published: false,
+        },
+      ])
+      .returning({ id: blogs.id });
 
     // Seed techs
-    await db.insert(techs).values([
-      {
-        slug: "javascript",
-        title: "JavaScript",
-        image: "js.jpg",
-        content: "JavaScript is a programming language.",
-      },
-      {
-        slug: "python",
-        title: "Python",
-        image: "python.jpg",
-        content: "Python is a programming language.",
-      },
-    ]);
+    const techIds = await db
+      .insert(techs)
+      .values([
+        {
+          slug: "javascript",
+          title: "JavaScript",
+          image: "js.jpg",
+          content: "JavaScript is a programming language.",
+        },
+        {
+          slug: "python",
+          title: "Python",
+          image: "python.jpg",
+          content: "Python is a programming language.",
+        },
+        {
+          slug: "java",
+          title: "Java",
+          image: "java.webp",
+          content: "Java is a programming language.",
+        },
+        {
+          slug: "reactjs",
+          title: "ReactJS",
+          image: "reactjs.svg",
+          content: "ReactJS is a framework of Javascript.",
+        },
+      ])
+      .returning({ id: techs.id });
 
     // Seed pages
     const pageIds = await db
@@ -108,6 +129,13 @@ async function seed() {
       { pageId: pageIds[0].id, blockId: blockIds[0].id, position: 1 },
       { pageId: pageIds[0].id, blockId: blockIds[1].id, position: 2 },
       { pageId: pageIds[1].id, blockId: blockIds[0].id, position: 1 },
+    ]);
+
+    // Seed blogTags
+    await db.insert(blogTags).values([
+      { blogId: blogsIds[0].id, tagId: techIds[0].id },
+      { blogId: blogsIds[0].id, tagId: techIds[1].id },
+      { blogId: blogsIds[1].id, tagId: techIds[0].id },
     ]);
 
     console.log("Seed data successfully inserted");

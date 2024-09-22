@@ -40,8 +40,9 @@ export const blogs = pgTable("blogs", {
   title: text("title").notNull(),
   image: text("image").notNull(),
   content: text("content").notNull(),
-  published: boolean("status").default(false),
+  published: boolean("published").default(false),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt"),
 });
 
 export const techs = pgTable("tags", {
@@ -51,6 +52,7 @@ export const techs = pgTable("tags", {
   image: text("image").notNull(),
   content: text("content").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt"),
 });
 
 export const pages = pgTable("pages", {
@@ -59,6 +61,7 @@ export const pages = pgTable("pages", {
   title: text("title").notNull(),
   hero: integer("hero_id").references(() => heros.id),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt"),
 });
 
 export const pageBlocks = pgTable("page_blocks", {
@@ -78,4 +81,21 @@ export const pageRelations = relations(pages, ({ many }) => ({
 
 export const blockRelations = relations(blocks, ({ many }) => ({
   pages: many(pageBlocks), // Many pages for each block through pageBlocks
+}));
+
+export const blogTags = pgTable("blog_tags", {
+  id: serial("id").primaryKey(),
+  blogId: integer("blog_id")
+    .references(() => blogs.id)
+    .notNull(),
+  tagId: integer("tag_id")
+    .references(() => techs.id)
+    .notNull(),
+});
+export const blogRelations = relations(blogs, ({ many }) => ({
+  tags: many(blogTags),
+}));
+
+export const tagRelations = relations(techs, ({ many }) => ({
+  blogs: many(blogTags),
 }));

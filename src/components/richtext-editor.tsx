@@ -10,12 +10,24 @@ const h3 = cn("prose-h3:text-lg prose-h3:font-medium");
 
 const base = "prose dark:prose-invert prose-base focus:outline-none max-w-none";
 
-interface RichTextEditorProps {
-  value?: string;
-  onChange?: (value: string) => void;
+interface RichTextEditorEvent {
+  target: {
+    value: string;
+    name?: string;
+  };
 }
 
-const RichTextEditor: React.FC<RichTextEditorProps> = ({ value="<h1>Hello World! 🌎️</h1>", onChange }) => {
+interface RichTextEditorProps {
+  name?: string;
+  value?: string;
+  onChange?: ({ target: { value, name } }: RichTextEditorEvent) => void;
+}
+
+const RichTextEditor: React.FC<RichTextEditorProps> = ({
+  name,
+  value = "<h1>Hello World! 🌎️</h1>",
+  onChange,
+}) => {
   const editor = useEditor({
     extensions: [StarterKit],
     editorProps: {
@@ -25,7 +37,13 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value="<h1>Hello World!
     },
     content: value,
     onUpdate: ({ editor }) => {
-      onChange && onChange(editor.getHTML());
+      const e = {
+        target: {
+          name,
+          value: editor.getHTML(),
+        },
+      };
+      onChange && onChange(e);
     },
   });
 

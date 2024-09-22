@@ -1,85 +1,127 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
+import RichTextEditor from "@/components/richtext-editor";
+import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-export function CreateUpdateBlog() {
+const FormSchema = z.object({
+  slug: z.string().min(1, { message: "Slug is required" }),
+  title: z.string().min(1, { message: "Title is required" }),
+  image: z.string().min(1, { message: "Image is required" }),
+  content: z.string().min(1, { message: "Content is required" }),
+  published: z.boolean().default(false),
+  hero: z.number({ message: "Hero is number" }).nullable(),
+});
+const initialState = {
+  message: "",
+};
+export default function CreateUpdateBlog() {
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      slug: "a",
+      title: "b",
+      image: "c",
+      content: "d",
+      published: false,
+      hero: null,
+    },
+  });
+  const onSubmit = (data: z.infer<typeof FormSchema>) => {
+    // TODO: submit here
+    console.log(data);
+  };
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Report an issue</CardTitle>
-        <CardDescription>
-          What area are you having problems with?
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-6">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="area">Area</Label>
-            <Select defaultValue="billing">
-              <SelectTrigger id="area">
-                <SelectValue placeholder="Select" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="team">Team</SelectItem>
-                <SelectItem value="billing">Billing</SelectItem>
-                <SelectItem value="account">Account</SelectItem>
-                <SelectItem value="deployments">Deployments</SelectItem>
-                <SelectItem value="support">Support</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="security-level">Security Level</Label>
-            <Select defaultValue="2">
-              <SelectTrigger
-                id="security-level"
-                className="line-clamp-1 w-[160px] truncate"
-              >
-                <SelectValue placeholder="Select level" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">Severity 1 (Highest)</SelectItem>
-                <SelectItem value="2">Severity 2</SelectItem>
-                <SelectItem value="3">Severity 3</SelectItem>
-                <SelectItem value="4">Severity 4 (Lowest)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="subject">Subject</Label>
-          <Input id="subject" placeholder="I need help with..." />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
-            placeholder="Please include all information relevant to your issue."
-          />
-        </div>
-      </CardContent>
-      <CardFooter className="justify-between space-x-2">
-        <Button variant="ghost">Cancel</Button>
-        <Button>Submit</Button>
-      </CardFooter>
-    </Card>
-  )
+    <main className="flex flex-col gap-7">
+      <div className="bg-destructive rounded-lg px-10 py-7 relative ">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="slug"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-muted-foreground">Slug</FormLabel>
+                  <FormControl className="dark:bg-zinc-700 bg-secondary">
+                    <Input
+                      className="rounded-xl px-4 py-5"
+                      placeholder="Slug"
+                      type="text"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel className="text-muted-foreground">Title</FormLabel>
+                    <FormControl className="dark:bg-zinc-700 bg-secondary">
+                      <Input
+                        className="rounded-xl px-4 py-5"
+                        placeholder="Title"
+                        type="text"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-muted-foreground">Image</FormLabel>
+                  <FormControl className="dark:bg-zinc-700 bg-secondary">
+                    <Input
+                      className="rounded-xl px-4 py-5"
+                      placeholder="Image"
+                      type="file"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="content"
+              render={({ field }) => {
+                return (
+                  <RichTextEditor
+                    value={field.value}
+                    onChange={field.onChange}
+                    name={field.name}
+                  />
+                );
+              }}
+            />
+            <Button className="w-full" type="submit">
+              Save
+            </Button>
+          </form>
+        </Form>
+      </div>
+    </main>
+  );
 }
