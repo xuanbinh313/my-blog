@@ -19,6 +19,7 @@ const schema = await buildSchema({
     ProjectsResolver,
     TagsResolver,
   ],
+  validate: true
 });
 
 // Initialize Apollo Server

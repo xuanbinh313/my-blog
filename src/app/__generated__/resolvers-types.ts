@@ -34,8 +34,9 @@ export type BlockProject = {
 export type Blog = {
   __typename?: 'Blog';
   content: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
   image: Scalars['String']['output'];
-  published: Scalars['String']['output'];
+  published: Scalars['Boolean']['output'];
   slug: Scalars['ID']['output'];
   tags: Array<Tag>;
   title: Scalars['String']['output'];
@@ -85,6 +86,31 @@ export type HeroProject = {
   subtitle: Scalars['String']['output'];
   title: Scalars['String']['output'];
   type: Scalars['ID']['output'];
+};
+
+export type InputBlog = {
+  content: Scalars['String']['input'];
+  image: Scalars['String']['input'];
+  slug: Scalars['String']['input'];
+  tags: Array<Scalars['String']['input']>;
+  title: Scalars['String']['input'];
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createBlog: Blog;
+  updateBlog: Blog;
+};
+
+
+export type MutationCreateBlogArgs = {
+  blog: InputBlog;
+};
+
+
+export type MutationUpdateBlogArgs = {
+  blog: InputBlog;
+  slug: Scalars['String']['input'];
 };
 
 export type Page = {
@@ -331,7 +357,7 @@ export type Sdk = ReturnType<typeof getSdk>;
 export type GetBlogsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetBlogsQuery = { __typename?: 'Query', blogs: Array<{ __typename?: 'Blog', image: string, title: string, slug: string, content: string, published: string, tags: Array<{ __typename?: 'Tag', slug: string, title: string }> }> };
+export type GetBlogsQuery = { __typename?: 'Query', blogs: Array<{ __typename?: 'Blog', image: string, title: string, slug: string, content: string, published: boolean, tags: Array<{ __typename?: 'Tag', slug: string, title: string }> }> };
 
 export type BlogBySlugQueryVariables = Exact<{
   slug: Scalars['String']['input'];

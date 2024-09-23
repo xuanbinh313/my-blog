@@ -40,7 +40,7 @@ export const blogs = pgTable("blogs", {
   title: text("title").notNull(),
   image: text("image").notNull(),
   content: text("content").notNull(),
-  published: boolean("published").default(false),
+  published: boolean("published").notNull().default(false),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt"),
 });
