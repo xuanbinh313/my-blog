@@ -18,6 +18,7 @@ query blogBySlug($slug: String!) {
     content
     image
     tags {
+      id
       slug
       title
     }

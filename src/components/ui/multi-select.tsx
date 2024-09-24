@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/command";
 import { Command as CommandPrimitive } from "cmdk";
 
-type Framework = Record<"value" | "label", string>;
+export type Framework = Record<"value" | "label", string>;
 
 const FRAMEWORKS = [
   {
@@ -49,14 +49,23 @@ const FRAMEWORKS = [
   },
 ] satisfies Framework[];
 
-export function FancyMultiSelect() {
+export interface FancyMultiSelectProps {
+  selected: Framework[];
+  onSelectedChange: (selected: Framework[]) => void;
+  options: Framework[];
+}
+
+export function FancyMultiSelect({
+  selected,
+  onSelectedChange,
+  options,
+}: FancyMultiSelectProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState<Framework[]>([FRAMEWORKS[1]]);
   const [inputValue, setInputValue] = React.useState("");
 
   const handleUnselect = React.useCallback((framework: Framework) => {
-    setSelected((prev) => prev.filter((s) => s.value !== framework.value));
+    onSelectedChange(selected.filter((s) => s.value !== framework.value));
   }, []);
 
   const handleKeyDown = React.useCallback(
@@ -65,11 +74,10 @@ export function FancyMultiSelect() {
       if (input) {
         if (e.key === "Delete" || e.key === "Backspace") {
           if (input.value === "") {
-            setSelected((prev) => {
-              const newSelected = [...prev];
-              newSelected.pop();
-              return newSelected;
-            });
+            const newSelected = [...selected];
+            newSelected.pop();
+            console.log(newSelected,selected);
+            onSelectedChange(newSelected);
           }
         }
         // This is not a default behaviour of the <input /> field
@@ -78,14 +86,12 @@ export function FancyMultiSelect() {
         }
       }
     },
-    []
+    [selected]
   );
 
-  const selectables = FRAMEWORKS.filter(
-    (framework) => !selected.includes(framework)
+  const selectables = options.filter(
+    (framework) => !selected.some((it) => it.value === framework.value)
   );
-
-  console.log(selectables, selected, inputValue);
 
   return (
     <Command
@@ -143,7 +149,7 @@ export function FancyMultiSelect() {
                       }}
                       onSelect={(value) => {
                         setInputValue("");
-                        setSelected((prev) => [...prev, framework]);
+                        onSelectedChange([...selected, framework]);
                       }}
                       className={"cursor-pointer"}
                     >

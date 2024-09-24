@@ -1,10 +1,10 @@
-import { ObjectType, Field, ID, InputType } from "type-graphql";
-import { Tag } from "./tags.schema";
+import { ObjectType, Field, ID, InputType, Int } from "type-graphql";
+import { Tag, InputTag } from "./tags.schema";
 
 
 @ObjectType("Blog")
 export class Blog {
-  @Field(() => ID)
+  @Field(() => Int)
   id: number;
 
   @Field(() => ID)
@@ -39,8 +39,8 @@ export class InputBlog {
   @Field(() => String)
   image: string;
 
-  @Field(() => [String])
-  tags: string[];
+  @Field(() => [Number])
+  tags: number[];
   
   @Field(() => Boolean)
   published: boolean = false;

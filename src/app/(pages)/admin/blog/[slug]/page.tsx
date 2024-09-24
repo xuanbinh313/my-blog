@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { FancyMultiSelect } from "@/components/ui/multi-select";
+import { FancyMultiSelect, Framework } from "@/components/ui/multi-select";
 import { Toggle } from "@/components/ui/toggle";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
@@ -23,20 +23,44 @@ import { useParams } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+const FRAMEWORKS = [
+  {
+    value: "javascript",
+    label: "JavaScript",
+    id: 17
+  },
+  {
+    value: "java",
+    label: "Java",
+    id: 19,
+  },
+  {
+    value: "python",
+    label: "Python",
+    id: 18,
+  },
+  {
+    value: "reactjs",
+    label: "ReactJS",
+    id: 20
+  },
+  
+];
 const FormSchema = z.object({
   slug: z.string().min(1, { message: "Slug is required" }),
   title: z.string().min(1, { message: "Title is required" }),
-  image: z.any().refine((files) => files, "Image file is required"),
+  image: z.string().min(1, "Image file is required"),
   content: z.string().min(1, { message: "Content is required" }),
   published: z.boolean().default(false),
+  tags: z
+    .array(z.object({ id: z.number(), title: z.string(), slug: z.string() }))
+    .default([]),
 });
 const initialState = {
   message: "",
 };
 
 const uploadImage = async (file: File) => {
-  console.log(file);
   const formData = new FormData();
   formData.append("file", file);
   await fetch("/api/upload", {
@@ -59,18 +83,22 @@ export default function CreateUpdateBlog() {
     defaultValues: {
       slug: "",
       title: "",
-      image: undefined,
+      image: "",
       content: "",
       published: false,
+      tags: [],
     },
   });
-  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+  form.watch("tags")
+  const onSubmit = async (blog: z.infer<typeof FormSchema>) => {
     // TODO: submit here
+    console.log("update");
     if (file) {
       await uploadImage(file);
     }
-    if (data?.image) {
-      client.updateBlog({ slug, blog: { ...data, tags: [] } });
+    const tags = blog.tags.map((it) => it.id);
+    if (data?.blog?.image) {
+      client.updateBlog({ slug, blog: { ...blog, tags } });
     }
   };
   const handleSubmit = () => {
@@ -87,7 +115,8 @@ export default function CreateUpdateBlog() {
       setImagePreview(`/assets/${data?.blog?.image}`);
     }
   }, [data?.blog]);
-  const imagePriview = file ? URL.createObjectURL(file) : imagePreview;
+  console.log("ERRORS", form.formState.errors, form.getValues());
+  const srcImage = file ? URL.createObjectURL(file) : imagePreview;
   return (
     <main className="flex flex-col gap-7 w-full">
       <div className="bg-destructive rounded-lg px-10 py-7 relative ">
@@ -137,6 +166,33 @@ export default function CreateUpdateBlog() {
             />
             <FormField
               control={form.control}
+              name="tags"
+              render={({ field }) => {
+                const handleSelected = (selected: Framework[]) => {
+                  field.onChange(
+                    selected.map((it) => ({
+                      title: it.label,
+                      slug: it.value,
+                      id: it.id,
+                    }))
+                  );
+                };
+                const value = field.value.map((it) => ({
+                  label: it.title,
+                  value: it.slug,
+                  id: it.id,
+                }));
+                return (
+                  <FancyMultiSelect
+                    onSelectedChange={handleSelected}
+                    selected={value}
+                    options={FRAMEWORKS}
+                  />
+                );
+              }}
+            />
+            <FormField
+              control={form.control}
               name="image"
               render={({ field: { onChange, value, ...rest } }) => {
                 const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
@@ -154,7 +210,7 @@ export default function CreateUpdateBlog() {
                       <Image
                         width={40}
                         height={40}
-                        src={imagePriview}
+                        src={srcImage}
                         alt={value || ""}
                       />
                     )}
@@ -223,8 +279,7 @@ export default function CreateUpdateBlog() {
               </div>
             </div>
           </form>
-        </Form> 
-        <FancyMultiSelect />
+        </Form>
       </div>
     </main>
   );

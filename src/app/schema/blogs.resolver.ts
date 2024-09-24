@@ -2,7 +2,7 @@ import { Arg, Mutation, Query, Resolver } from "type-graphql";
 
 import { db } from "@/db/drizzle";
 import { blogs, blogTags, techs } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { Blog, InputBlog } from "./blogs.schema";
 
 @Resolver(Blog)
@@ -60,15 +60,30 @@ export class BlogsResolver {
     @Arg("blog") blog: InputBlog
   ): Promise<Blog> {
     const [blogsDB] = await db.select().from(blogs).where(eq(blogs.slug, slug));
-    console.log(blogsDB);
     if (!blogsDB) {
       throw new Error("Blog not found");
     }
-    const result = await db
-      .update(blogs)
-      .set(blog)
-      .where(eq(blogs.slug, slug))
-      .returning({ id: blogs.id });
-    return {} as Blog;
+    // Step 1: Get existing tag associations for the blog
+    const existingTags = await db
+      .select()
+      .from(blogTags)
+      .where(eq(blogTags.blogId, blogsDB.id));
+    // Step 2: Filter out existing tagIds
+    const existingTagIds = existingTags.map((tag) => tag.tagId);
+    const newTagsToInsert = blog.tags.filter(
+      (tagId) => !existingTagIds.includes(tagId)
+    );
+
+    // Step 3: Insert new tags only
+    if (newTagsToInsert.length > 0) {
+      await db
+        .insert(blogTags)
+        .values(
+          newTagsToInsert.map((tagId) => ({ blogId: blogsDB.id, tagId }))
+        );
+    }
+    await db.execute(sql`DELETE FROM ${blogTags} WHERE ${blogTags.blogId} = ${sql.raw(blogsDB.id.toString())} AND ${blogTags.tagId} NOT IN (${sql.raw(blog.tags.join(","))})`);
+    await db.update(blogs).set(blog).where(eq(blogs.slug, slug));
+    return { ...blogsDB, tags:[] };
   }
 }

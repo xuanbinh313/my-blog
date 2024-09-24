@@ -1,8 +1,8 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { ObjectType, Field, ID, Int, InputType } from "type-graphql";
 
 @ObjectType("Tag")
 export class Tag {
-  @Field(() => ID)
+  @Field(() => Int)
   id!: number;
 
   @Field(() => ID)
@@ -16,4 +16,19 @@ export class Tag {
 
   @Field(() => String)
   content!: string;
+}
+
+@InputType("InputTag")
+export class InputTag {
+  @Field()
+  slug!: string;
+  
+  @Field()
+  title!: string;
+
+  @Field(() => String)
+  content!: string;
+
+  @Field(() => String)
+  image!: string;
 }
