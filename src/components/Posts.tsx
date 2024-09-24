@@ -4,7 +4,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 const Posts = () => {
   const { data } = useSuspenseQuery({
-    queryKey: ["dogs"],
+    queryKey: ["blogs"],
     queryFn: async () => await client.getBlogs(),
   });
   return data?.blogs?.map((item) => <p key={item.slug}>{item.title}</p>);

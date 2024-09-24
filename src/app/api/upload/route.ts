@@ -5,9 +5,10 @@ export async function POST(req: Request) {
   try {
     const formData = req.formData();
     const file = (await formData).get("file") as File;
+    console.log(file);
     const arrayBuffer = await file.arrayBuffer();
     const buffer = new Uint8Array(arrayBuffer);
-    await promises.writeFile(`./public/upload/${file.name}`, buffer);
+    await promises.writeFile(`./public/assets/${file.name}`, buffer);
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ success: false, error });

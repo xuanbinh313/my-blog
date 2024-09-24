@@ -66,7 +66,6 @@ export const columns: ColumnDef<GetBlogsQuery["blogs"][number]>[] = [
       <DataTableColumnHeader column={column} title="Title" />
     ),
     cell: ({ row }) => {
-      console.log(row);
       return (
         <div className="flex flex-col space-2">
           <Link className="max-w-[500px] truncate font-medium" href={`/admin/blog/${row.getValue("slug")}`}>

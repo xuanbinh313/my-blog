@@ -41,5 +41,8 @@ export class InputBlog {
 
   @Field(() => [String])
   tags: string[];
+  
+  @Field(() => Boolean)
+  published: boolean = false;
 }
 

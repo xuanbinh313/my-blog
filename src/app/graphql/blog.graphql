@@ -8,7 +8,6 @@ query getBlogs {
       slug
       title
     }
-    published
   }
 }
 
@@ -22,5 +21,31 @@ query blogBySlug($slug: String!) {
       slug
       title
     }
+    published
+  }
+}
+
+mutation createBlog($blog: InputBlog!) {
+  createBlog(blog: $blog) {
+    title
+    content
+    image
+    tags {
+      slug
+      title
+    }
+    published
+  }
+}
+mutation updateBlog($slug: String!, $blog: InputBlog!) {
+  updateBlog(slug: $slug, blog: $blog) {
+    title
+    content
+    image
+    tags {
+      slug
+      title
+    }
+    published
   }
 }

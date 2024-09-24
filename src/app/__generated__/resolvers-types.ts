@@ -198,7 +198,6 @@ export const GetBlogsDocument = gql`
       slug
       title
     }
-    published
   }
 }
     `;
@@ -206,6 +205,33 @@ export const BlogBySlugDocument = gql`
     query blogBySlug($slug: String!) {
   blog(slug: $slug) {
     slug
+    title
+    content
+    image
+    tags {
+      slug
+      title
+    }
+    published
+  }
+}
+    `;
+export const CreateBlogDocument = gql`
+    mutation createBlog($blog: InputBlog!) {
+  createBlog(blog: $blog) {
+    title
+    content
+    image
+    tags {
+      slug
+      title
+    }
+  }
+}
+    `;
+export const UpdateBlogDocument = gql`
+    mutation updateBlog($slug: String!, $blog: InputBlog!) {
+  updateBlog(slug: $slug, blog: $blog) {
     title
     content
     image
@@ -330,6 +356,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     blogBySlug(variables: BlogBySlugQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<BlogBySlugQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<BlogBySlugQuery>(BlogBySlugDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'blogBySlug', 'query', variables);
     },
+    createBlog(variables: CreateBlogMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CreateBlogMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateBlogMutation>(CreateBlogDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createBlog', 'mutation', variables);
+    },
+    updateBlog(variables: UpdateBlogMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<UpdateBlogMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateBlogMutation>(UpdateBlogDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateBlog', 'mutation', variables);
+    },
     getHeaders(variables?: GetHeadersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetHeadersQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetHeadersQuery>(GetHeadersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getHeaders', 'query', variables);
     },
@@ -357,14 +389,29 @@ export type Sdk = ReturnType<typeof getSdk>;
 export type GetBlogsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetBlogsQuery = { __typename?: 'Query', blogs: Array<{ __typename?: 'Blog', image: string, title: string, slug: string, content: string, published: boolean, tags: Array<{ __typename?: 'Tag', slug: string, title: string }> }> };
+export type GetBlogsQuery = { __typename?: 'Query', blogs: Array<{ __typename?: 'Blog', image: string, title: string, slug: string, content: string, tags: Array<{ __typename?: 'Tag', slug: string, title: string }> }> };
 
 export type BlogBySlugQueryVariables = Exact<{
   slug: Scalars['String']['input'];
 }>;
 
 
-export type BlogBySlugQuery = { __typename?: 'Query', blog?: { __typename?: 'Blog', slug: string, title: string, content: string, image: string, tags: Array<{ __typename?: 'Tag', slug: string, title: string }> } | null };
+export type BlogBySlugQuery = { __typename?: 'Query', blog?: { __typename?: 'Blog', slug: string, title: string, content: string, image: string, published: boolean, tags: Array<{ __typename?: 'Tag', slug: string, title: string }> } | null };
+
+export type CreateBlogMutationVariables = Exact<{
+  blog: InputBlog;
+}>;
+
+
+export type CreateBlogMutation = { __typename?: 'Mutation', createBlog: { __typename?: 'Blog', title: string, content: string, image: string, tags: Array<{ __typename?: 'Tag', slug: string, title: string }> } };
+
+export type UpdateBlogMutationVariables = Exact<{
+  slug: Scalars['String']['input'];
+  blog: InputBlog;
+}>;
+
+
+export type UpdateBlogMutation = { __typename?: 'Mutation', updateBlog: { __typename?: 'Blog', title: string, content: string, image: string, tags: Array<{ __typename?: 'Tag', slug: string, title: string }> } };
 
 export type GetHeadersQueryVariables = Exact<{ [key: string]: never; }>;
 

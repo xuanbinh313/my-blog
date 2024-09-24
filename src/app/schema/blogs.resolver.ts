@@ -35,7 +35,6 @@ export class BlogsResolver {
       const tag = curr.tags;
       const blog = curr.blogs;
       if (!pre[blog.id]) {
-        // TODO: fix later published
         pre[blog.id] = { ...blog, tags: tag ? [tag] : [] };
       }
       if (pre[blog.id] && tag) {
@@ -61,6 +60,7 @@ export class BlogsResolver {
     @Arg("blog") blog: InputBlog
   ): Promise<Blog> {
     const [blogsDB] = await db.select().from(blogs).where(eq(blogs.slug, slug));
+    console.log(blogsDB);
     if (!blogsDB) {
       throw new Error("Blog not found");
     }
@@ -69,6 +69,6 @@ export class BlogsResolver {
       .set(blog)
       .where(eq(blogs.slug, slug))
       .returning({ id: blogs.id });
-    return result[0] as Blog;
+    return {} as Blog;
   }
 }

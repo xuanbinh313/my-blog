@@ -3,6 +3,7 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { cn } from "@/lib/utils";
+import { useEffect } from "react";
 
 const h1 = cn("prose-h1:text-3xl prose-h1:font-medium");
 const h2 = cn("prose-h2:text-2xl prose-h2:font-medium");
@@ -21,12 +22,14 @@ interface RichTextEditorProps {
   name?: string;
   value?: string;
   onChange?: ({ target: { value, name } }: RichTextEditorEvent) => void;
+  disabled?: boolean;
 }
 
 const RichTextEditor: React.FC<RichTextEditorProps> = ({
   name,
   value = "<h1>Hello World! 🌎️</h1>",
   onChange,
+  disabled,
 }) => {
   const editor = useEditor({
     extensions: [StarterKit],
@@ -45,8 +48,13 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       };
       onChange && onChange(e);
     },
+    editable: !disabled,
   });
-
+  useEffect(() => {
+    if (value && editor) {
+      editor?.commands.setContent(value as string);
+    }
+  }, [value, editor]);
   return <EditorContent editor={editor} />;
 };
 

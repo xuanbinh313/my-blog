@@ -33,10 +33,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <aside className="-mx-4 lg:w-1/5">
           <SidebarNav items={sidebarNavItems} />
         </aside>
-        <main className="w-full">
-          <div className="flex-1">
-            {children}</div>
-        </main>
+        <div className="flex flex-col gap-y-7 max-w-3xl mx-auto w-full">
+          {children}
+        </div>
       </div>
     </div>
   );
