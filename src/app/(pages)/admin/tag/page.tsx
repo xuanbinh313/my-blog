@@ -1,8 +1,9 @@
 import { Metadata } from "next";
 
+import BlogsAdmin from "./components/blogs-admin";
+import { UserNav } from "../../../../components/data-table/user-nav";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import BlogsAdmin from "./components/blogs-admin";
 
 export const metadata: Metadata = {
   title: "Blogs",

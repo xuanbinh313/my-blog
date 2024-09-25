@@ -1,6 +1,6 @@
 import { SidebarNav } from "@/components/side-navbar";
 import { Metadata } from "next";
-import { UserNav } from "./blog/components/user-nav";
+import { UserNav } from "../../../components/data-table/user-nav";
 
 export const metadata: Metadata = {
   title: "Forms",

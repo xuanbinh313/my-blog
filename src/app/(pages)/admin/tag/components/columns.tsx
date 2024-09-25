@@ -6,12 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { GetBlogsQuery } from "@/app/__generated__/resolvers-types";
-import Image from "next/image";
-import Link from "next/link";
 import { Task } from "@/components/data-table/data/schema";
 import { labels, priorities, statuses } from "@/components/data-table/data/data";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { DataTableRowActions } from "@/components/data-table/data-table-row-actions";
+import Image from "next/image";
+import Link from "next/link";
 
 export const columns: ColumnDef<GetBlogsQuery["blogs"][number]>[] = [
   {
