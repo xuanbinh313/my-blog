@@ -1,0 +1,1 @@
+ALTER TABLE "blogs" ALTER COLUMN "published" SET NOT NULL;

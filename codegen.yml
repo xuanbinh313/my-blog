@@ -9,3 +9,7 @@ generates:
       - "typescript"
       - "typescript-graphql-request"
       - "typescript-operations"
+    # DB Postgres use id as number
+    config:
+      scalars:
+        ID: number

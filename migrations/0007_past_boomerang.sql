@@ -1,0 +1,1 @@
+ALTER TABLE "blogs" ALTER COLUMN "summary" SET NOT NULL;

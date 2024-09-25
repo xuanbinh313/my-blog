@@ -10,7 +10,7 @@ export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' |
 type GraphQLClientRequestHeaders = RequestOptions['requestHeaders'];
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string; }
+  ID: { input: number; output: number; }
   String: { input: string; output: string; }
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
@@ -34,10 +34,11 @@ export type BlockProject = {
 export type Blog = {
   __typename?: 'Blog';
   content: Scalars['String']['output'];
-  id: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
   image: Scalars['String']['output'];
   published: Scalars['Boolean']['output'];
-  slug: Scalars['ID']['output'];
+  slug: Scalars['String']['output'];
+  summary: Scalars['String']['output'];
   tags: Array<Tag>;
   title: Scalars['String']['output'];
 };
@@ -93,6 +94,7 @@ export type InputBlog = {
   image: Scalars['String']['input'];
   published?: Scalars['Boolean']['input'];
   slug: Scalars['String']['input'];
+  summary: Scalars['String']['input'];
   tags: Array<Scalars['Float']['input']>;
   title: Scalars['String']['input'];
 };
@@ -175,15 +177,15 @@ export type QueryProjectArgs = {
 
 
 export type QueryTagArgs = {
-  slug: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
 };
 
 export type Tag = {
   __typename?: 'Tag';
   content: Scalars['String']['output'];
-  id: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
   image: Scalars['String']['output'];
-  slug: Scalars['ID']['output'];
+  slug: Scalars['String']['output'];
   title: Scalars['String']['output'];
 };
 
@@ -194,7 +196,7 @@ export const GetBlogsDocument = gql`
     image
     title
     slug
-    content
+    summary
     tags {
       slug
       title
@@ -207,6 +209,7 @@ export const BlogBySlugDocument = gql`
   blog(slug: $slug) {
     slug
     title
+    summary
     content
     image
     tags {
@@ -222,6 +225,7 @@ export const CreateBlogDocument = gql`
     mutation createBlog($blog: InputBlog!) {
   createBlog(blog: $blog) {
     title
+    summary
     content
     image
     tags {
@@ -236,6 +240,7 @@ export const UpdateBlogDocument = gql`
     mutation updateBlog($slug: String!, $blog: InputBlog!) {
   updateBlog(slug: $slug, blog: $blog) {
     title
+    summary
     content
     image
     tags {
@@ -336,13 +341,13 @@ export const GetTagsDocument = gql`
 }
     `;
 export const GetTagDocument = gql`
-    query getTag($slug: String!) {
-  tag(slug: $slug) {
+    query getTag($id: ID!) {
+  tag(id: $id) {
     id
     slug
     title
-    image
     content
+    image
   }
 }
     `;
@@ -393,21 +398,21 @@ export type Sdk = ReturnType<typeof getSdk>;
 export type GetBlogsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetBlogsQuery = { __typename?: 'Query', blogs: Array<{ __typename?: 'Blog', image: string, title: string, slug: string, content: string, tags: Array<{ __typename?: 'Tag', slug: string, title: string }> }> };
+export type GetBlogsQuery = { __typename?: 'Query', blogs: Array<{ __typename?: 'Blog', image: string, title: string, slug: string, summary: string, tags: Array<{ __typename?: 'Tag', slug: string, title: string }> }> };
 
 export type BlogBySlugQueryVariables = Exact<{
   slug: Scalars['String']['input'];
 }>;
 
 
-export type BlogBySlugQuery = { __typename?: 'Query', blog?: { __typename?: 'Blog', slug: string, title: string, content: string, image: string, published: boolean, tags: Array<{ __typename?: 'Tag', id: number, slug: string, title: string }> } | null };
+export type BlogBySlugQuery = { __typename?: 'Query', blog?: { __typename?: 'Blog', slug: string, title: string, summary: string, content: string, image: string, published: boolean, tags: Array<{ __typename?: 'Tag', id: number, slug: string, title: string }> } | null };
 
 export type CreateBlogMutationVariables = Exact<{
   blog: InputBlog;
 }>;
 
 
-export type CreateBlogMutation = { __typename?: 'Mutation', createBlog: { __typename?: 'Blog', title: string, content: string, image: string, published: boolean, tags: Array<{ __typename?: 'Tag', slug: string, title: string }> } };
+export type CreateBlogMutation = { __typename?: 'Mutation', createBlog: { __typename?: 'Blog', title: string, summary: string, content: string, image: string, published: boolean, tags: Array<{ __typename?: 'Tag', slug: string, title: string }> } };
 
 export type UpdateBlogMutationVariables = Exact<{
   slug: Scalars['String']['input'];
@@ -415,38 +420,38 @@ export type UpdateBlogMutationVariables = Exact<{
 }>;
 
 
-export type UpdateBlogMutation = { __typename?: 'Mutation', updateBlog: { __typename?: 'Blog', title: string, content: string, image: string, published: boolean, tags: Array<{ __typename?: 'Tag', slug: string, title: string }> } };
+export type UpdateBlogMutation = { __typename?: 'Mutation', updateBlog: { __typename?: 'Blog', title: string, summary: string, content: string, image: string, published: boolean, tags: Array<{ __typename?: 'Tag', slug: string, title: string }> } };
 
 export type GetHeadersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetHeadersQuery = { __typename?: 'Query', headers: Array<{ __typename?: 'HeaderItem', slug: string, name: string }> };
+export type GetHeadersQuery = { __typename?: 'Query', headers: Array<{ __typename?: 'HeaderItem', slug: number, name: string }> };
 
 export type GetPageQueryVariables = Exact<{
   slug: Scalars['String']['input'];
 }>;
 
 
-export type GetPageQuery = { __typename?: 'Query', page?: { __typename?: 'Page', slug: string, title: string, hero: { __typename?: 'Hero', type: string, image: string, title: string, subtitle: string, content: string }, blocks: Array<{ __typename?: 'Block', name: string, value: string, type: string }> } | null };
+export type GetPageQuery = { __typename?: 'Query', page?: { __typename?: 'Page', slug: number, title: string, hero: { __typename?: 'Hero', type: number, image: string, title: string, subtitle: string, content: string }, blocks: Array<{ __typename?: 'Block', name: string, value: number, type: string }> } | null };
 
 export type GetProjectQueryVariables = Exact<{
   slug: Scalars['String']['input'];
 }>;
 
 
-export type GetProjectQuery = { __typename?: 'Query', project?: { __typename?: 'Project', slug: string, title: string, hero: { __typename?: 'HeroProject', type: string, image: string, title: string, subtitle: string, content: string }, blocks: Array<{ __typename?: 'BlockProject', name: string, value: string, type: string }> } | null };
+export type GetProjectQuery = { __typename?: 'Query', project?: { __typename?: 'Project', slug: number, title: string, hero: { __typename?: 'HeroProject', type: number, image: string, title: string, subtitle: string, content: string }, blocks: Array<{ __typename?: 'BlockProject', name: string, value: number, type: string }> } | null };
 
 export type GetDogsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetDogsQuery = { __typename?: 'Query', dogs: Array<{ __typename?: 'Dog', name: string, breed: string, ageInWeeks: number, image: string, sex: string, weight: number, fee: number }> };
+export type GetDogsQuery = { __typename?: 'Query', dogs: Array<{ __typename?: 'Dog', name: number, breed: string, ageInWeeks: number, image: string, sex: string, weight: number, fee: number }> };
 
 export type DogByNameQueryVariables = Exact<{
   name: Scalars['String']['input'];
 }>;
 
 
-export type DogByNameQuery = { __typename?: 'Query', dog?: { __typename?: 'Dog', name: string, breed: string, ageInWeeks: number, image: string, sex: string, description: Array<string>, color: string, attributes: Array<{ __typename?: 'DogAttribute', key: string, value: string }> } | null };
+export type DogByNameQuery = { __typename?: 'Query', dog?: { __typename?: 'Dog', name: number, breed: string, ageInWeeks: number, image: string, sex: string, description: Array<string>, color: string, attributes: Array<{ __typename?: 'DogAttribute', key: number, value: string }> } | null };
 
 export type GetTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -454,8 +459,8 @@ export type GetTagsQueryVariables = Exact<{ [key: string]: never; }>;
 export type GetTagsQuery = { __typename?: 'Query', tags: Array<{ __typename?: 'Tag', id: number, slug: string, title: string, image: string, content: string }> };
 
 export type GetTagQueryVariables = Exact<{
-  slug: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
 }>;
 
 
-export type GetTagQuery = { __typename?: 'Query', tag?: { __typename?: 'Tag', id: number, slug: string, title: string, image: string, content: string } | null };
+export type GetTagQuery = { __typename?: 'Query', tag?: { __typename?: 'Tag', id: number, slug: string, title: string, content: string, image: string } | null };

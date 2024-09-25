@@ -2,10 +2,10 @@ import { ObjectType, Field, ID, Int, InputType } from "type-graphql";
 
 @ObjectType("Tag")
 export class Tag {
-  @Field(() => Int)
+  @Field(() => ID)
   id!: number;
 
-  @Field(() => ID)
+  @Field(() => String)
   slug!: string;
 
   @Field(() => String)

@@ -4,10 +4,10 @@ import { Tag, InputTag } from "./tags.schema";
 
 @ObjectType("Blog")
 export class Blog {
-  @Field(() => Int)
+  @Field(() => ID)
   id: number;
 
-  @Field(() => ID)
+  @Field(() => String)
   slug: string;
 
   @Field(() => [Tag])
@@ -15,6 +15,9 @@ export class Blog {
 
   @Field(() => String)
   title: string;
+
+  @Field(() => String)
+  summary: string;
 
   @Field(() => String)
   content: string;
@@ -33,6 +36,9 @@ export class InputBlog {
   @Field()
   title: string;
 
+  @Field(() => String)
+  summary: string;
+  
   @Field(() => String)
   content: string;
 

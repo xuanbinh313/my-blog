@@ -39,6 +39,7 @@ export const blogs = pgTable("blogs", {
   slug: text("slug").unique().notNull(),
   title: text("title").notNull(),
   image: text("image").notNull(),
+  summary: text("summary").notNull(),
   content: text("content").notNull(),
   published: boolean("published").notNull().default(false),
   createdAt: timestamp("createdAt").defaultNow().notNull(),

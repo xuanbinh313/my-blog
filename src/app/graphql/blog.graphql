@@ -3,7 +3,7 @@ query getBlogs {
     image
     title
     slug
-    content
+    summary
     tags {
       slug
       title
@@ -15,6 +15,7 @@ query blogBySlug($slug: String!) {
   blog(slug: $slug) {
     slug
     title
+    summary
     content
     image
     tags {
@@ -29,6 +30,7 @@ query blogBySlug($slug: String!) {
 mutation createBlog($blog: InputBlog!) {
   createBlog(blog: $blog) {
     title
+    summary
     content
     image
     tags {
@@ -41,6 +43,7 @@ mutation createBlog($blog: InputBlog!) {
 mutation updateBlog($slug: String!, $blog: InputBlog!) {
   updateBlog(slug: $slug, blog: $blog) {
     title
+    summary
     content
     image
     tags {

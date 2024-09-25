@@ -70,6 +70,7 @@ async function seed() {
         {
           slug: "first-post",
           title: "First Blog Post",
+          summary: "This is the first blog post.",
           image: "bg1.jpeg",
           content: "This is the first blog post.",
           published: true,
@@ -77,6 +78,7 @@ async function seed() {
         {
           slug: "second-post",
           title: "Second Blog Post",
+          summary: "This is the second blog post.",
           image: "bg2.png",
           content: "This is the second blog post.",
           published: false,

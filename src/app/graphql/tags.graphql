@@ -7,12 +7,12 @@ query getTags {
     content
   }
 }
-query getTag($slug: String!) {
-  tag(slug: $slug) {
+query getTag($id: ID!) {
+  tag(id: $id) {
     id
     slug
     title
-    image
     content
+    image
   }
 }
