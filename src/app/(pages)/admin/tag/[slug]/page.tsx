@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { FancyMultiSelect, Framework } from "@/components/ui/multi-select";
+import { Textarea } from "@/components/ui/textarea";
 import { Toggle } from "@/components/ui/toggle";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
@@ -48,12 +49,8 @@ const FormSchema = z.object({
   slug: z.string().min(1, { message: "Slug is required" }),
   title: z.string().min(1, { message: "Title is required" }),
   image: z.string().min(1, "Image file is required"),
-  summary: z.string().min(1, { message: "Summary is required" }),
+  link: z.string().nullable(),
   content: z.string().min(1, { message: "Content is required" }),
-  published: z.boolean().default(false),
-  tags: z
-    .array(z.object({ id: z.number(), title: z.string(), slug: z.string() }))
-    .default([]),
 });
 
 const uploadImage = async (file: File) => {
@@ -67,9 +64,11 @@ const uploadImage = async (file: File) => {
 
 export default function CreateUpdateTag() {
   const { slug } = useParams<{ slug: string }>();
+  const [id, slugName] = slug.split("-");
+  console.log("ID", id, slugName);
   const { data } = useQuery({
     queryKey: ["tag", slug],
-    queryFn: async () => await client.getTag({ slug }),
+    queryFn: async () => await client.getTagById({ id: Number(id) }),
     enabled: !!slug && slug !== "new",
   });
   const [isEdit, setIsEdit] = useState(!(!!slug && slug !== "new"));
@@ -82,20 +81,18 @@ export default function CreateUpdateTag() {
       title: "",
       image: "",
       content: "",
+      link: "",
     },
   });
   // TODO: Test again
   form.watch("tags");
-  const onSubmit = async (blog: z.infer<typeof FormSchema>) => {
+  const onSubmit = async (tag: z.infer<typeof FormSchema>) => {
     // TODO: submit here
     console.log("update");
     if (file) {
       await uploadImage(file);
     }
-    const tags = blog.tags.map((it) => it.id);
-    if (data?.tag?.image) {
-      client.updateBlog({ slug, blog: { ...blog, tags } });
-    }
+    client.createTag({ id: Number(id), payload: tag });
   };
   const handleSubmit = () => {
     if (isEdit) {
@@ -143,14 +140,14 @@ export default function CreateUpdateTag() {
             />
             <FormField
               control={form.control}
-              name="summary"
+              name="slug"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-muted-foreground">Summary</FormLabel>
+                  <FormLabel className="text-muted-foreground">Slug</FormLabel>
                   <FormControl className="dark:bg-zinc-700 bg-secondary">
                     <Input
                       className="rounded-xl px-4 py-5"
-                      placeholder="Summary"
+                      placeholder="slug"
                       type="text"
                       {...field}
                       disabled={!isEdit}
@@ -159,33 +156,6 @@ export default function CreateUpdateTag() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
-            <FormField
-              control={form.control}
-              name="tags"
-              render={({ field }) => {
-                const handleSelected = (selected: Framework[]) => {
-                  field.onChange(
-                    selected.map((it) => ({
-                      title: it.label,
-                      slug: it.value,
-                      id: it.id,
-                    }))
-                  );
-                };
-                const value = field.value.map((it) => ({
-                  label: it.title,
-                  value: it.slug,
-                  id: it.id,
-                }));
-                return (
-                  <FancyMultiSelect
-                    onSelectedChange={handleSelected}
-                    selected={value}
-                    options={FRAMEWORKS}
-                  />
-                );
-              }}
             />
             <FormField
               control={form.control}
@@ -203,14 +173,15 @@ export default function CreateUpdateTag() {
                       Image
                     </FormLabel>
                     <div className="w-full border-0 relative p-5">
-                      <figure className="flex flex-col gap-2 h-40">
+                      <figure className="flex items-center justify-center">
                         {value && (
                           <Image
                             src={srcImage}
                             alt={value || ""}
-                            layout="fill"
                             objectFit="cover"
                             objectPosition="center"
+                            width={200}
+                            height={200}
                           />
                         )}
                       </figure>
@@ -234,19 +205,53 @@ export default function CreateUpdateTag() {
                 );
               }}
             />
+
             <FormField
               control={form.control}
               name="content"
               render={({ field }) => {
                 return (
-                  <RichTextEditor
-                    value={field.value}
-                    onChange={field.onChange}
-                    name={field.name}
-                    disabled={!isEdit}
-                  />
+                  <FormItem>
+                    <FormLabel className="text-muted-foreground">
+                      Content
+                    </FormLabel>
+                    <FormControl className="dark:bg-zinc-700 bg-secondary">
+                      <Textarea
+                        className="rounded-xl px-4 py-5"
+                        placeholder="Content"
+                        {...field}
+                        disabled={!isEdit}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 );
               }}
+            />
+            <FormField
+              control={form.control}
+              name="link"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-muted-foreground">Link</FormLabel>
+                  <FormControl className="dark:bg-zinc-700 bg-secondary">
+                    {!isEdit && field.value ? (
+                      <a href={field.value} target="_blank" rel="noreferrer">
+                        {field.value}
+                      </a>
+                    ) : (
+                      <Input
+                        className="rounded-xl px-4 py-5"
+                        placeholder="Link"
+                        type="text"
+                        {...field}
+                        disabled={!isEdit}
+                      />
+                    )}
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
             <div className="absolute top-0 right-0">
               <div className="flex flex-row">

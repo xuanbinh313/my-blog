@@ -11,6 +11,9 @@ export class Tag {
   @Field(() => String)
   title!: string;
 
+  @Field(() => String, { nullable: true })
+  link: string | null;
+
   @Field(() => String)
   image!: string;
 
@@ -20,15 +23,18 @@ export class Tag {
 
 @InputType("InputTag")
 export class InputTag {
-  @Field()
-  slug!: string;
+  @Field(() => String)
+  slug: string;
 
   @Field()
-  title!: string;
+  title: string;
+
+  @Field(() => String, { nullable: true })
+  link: string | null;
 
   @Field(() => String)
-  content!: string;
+  content: string;
 
   @Field(() => String)
-  image!: string;
+  image: string;
 }

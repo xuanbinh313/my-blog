@@ -5,12 +5,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { GetBlogsQuery } from "@/app/__generated__/resolvers-types";
+import { GetTagsQuery } from "@/app/__generated__/resolvers-types";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import Image from "next/image";
 import Link from "next/link";
 
-export const columns: ColumnDef<GetBlogsQuery["blogs"][number]>[] = [
+export const columns: ColumnDef<GetTagsQuery["tags"][number]>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -45,7 +45,7 @@ export const columns: ColumnDef<GetBlogsQuery["blogs"][number]>[] = [
       <DataTableColumnHeader column={column} title="Image" />
     ),
     cell: ({ row }) => (
-      <div className="flex justify-center items-center">
+      <div className="flex items-center">
         <Image
           width={50}
           height={30}
@@ -67,15 +67,10 @@ export const columns: ColumnDef<GetBlogsQuery["blogs"][number]>[] = [
         <div className="flex flex-col space-2">
           <Link
             className="max-w-[500px] truncate font-medium"
-            href={`/admin/blog/${row.getValue("slug")}`}
+            href={`/admin/tag/${row.original.id}-${row.getValue("slug")}`}
           >
             {row.getValue("title")}
           </Link>
-          <div>
-            {row.original.tags.map((it) => (
-              <Badge variant="outline">{it.title}</Badge>
-            ))}
-          </div>
         </div>
       );
     },

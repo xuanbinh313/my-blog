@@ -7,12 +7,24 @@ query getTags {
     content
   }
 }
-query getTag($id: ID!) {
+query getTagById($id: ID!) {
   tag(id: $id) {
     id
     slug
     title
     content
     image
+    link
+  }
+}
+
+mutation createTag($id: ID!, $payload: InputTag!) {
+  createTag(id: $id, payload: $payload) {
+    id
+    slug
+    title
+    content
+    image
+    link
   }
 }

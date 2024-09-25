@@ -1,16 +1,15 @@
 import { Metadata } from "next";
 
-import BlogsAdmin from "./components/blogs-admin";
-import { UserNav } from "../../../../components/data-table/user-nav";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import TagsAdmin from "./components/tags-admin";
 
 export const metadata: Metadata = {
   title: "Blogs",
   description: "Manage your blogs",
 };
 
-export default async function BlogsAdminPage() {
+export default async function TagsAdminPage() {
   return (
     <>
       <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
@@ -23,11 +22,11 @@ export default async function BlogsAdminPage() {
           </div>
           <div className="flex items-center space-x-2">
             <Button asChild>
-              <Link href="/admin/blog/new">Add</Link>
+              <Link href="/admin/tag/new">Add</Link>
             </Button>
           </div>
         </div>
-        <BlogsAdmin />
+        <TagsAdmin />
       </div>
     </>
   );

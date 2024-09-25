@@ -33,6 +33,7 @@ export class Blog {
 export class InputBlog {
   @Field()
   slug: string;
+  
   @Field()
   title: string;
 

@@ -1,16 +1,16 @@
-import { Resolver, Query, Arg, ID } from "type-graphql";
+import { Resolver, Query, Arg, ID, Mutation } from "type-graphql";
 
-import { Tag } from "./tags.schema";
+import { InputTag, Tag } from "./tags.schema";
 import { techs } from "@/db/schema";
 import { db } from "@/db/drizzle";
-import { sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 @Resolver(Tag)
 export class TagsResolver {
   @Query(() => Tag, { nullable: true })
   async tag(@Arg("id", () => ID) id: number): Promise<Tag | undefined> {
     const query = sql`
-      SELECT ${techs.id},${techs.slug},${techs.title},${techs.image},${techs.content} 
+      SELECT ${techs.id},${techs.link},${techs.slug},${techs.title},${techs.image},${techs.content} 
       FROM ${techs} 
       WHERE id = ${id}
     `;
@@ -26,5 +26,30 @@ export class TagsResolver {
   async tags(): Promise<Tag[]> {
     const tagsRes = await db.select().from(techs);
     return tagsRes;
+  }
+
+  @Mutation(() => Tag)
+  async createTag(
+    @Arg("id", () => ID) id: number,
+    @Arg("payload") tag: InputTag
+  ): Promise<Tag> {
+    console.log("id", id);
+    let init = { id: 0, slug: '', title: '', content: '', image: '', link: '' }; 
+    let result =  null
+    if (!id) {
+      result = await db.execute(sql`INSERT INTO ${techs} ${tag} RETURNING *`);
+    } else{
+      await db
+        .update(techs)
+        .set({
+          image: tag.image,
+          slug: tag.slug,
+          title: tag.title,
+          content: tag.content,
+          link: tag.link,
+        })
+        .where(eq(techs.id, id));
+    }
+    return result ? result.rows[0] as unknown as Tag : init;
   }
 }

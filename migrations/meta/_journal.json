@@ -57,6 +57,13 @@
       "when": 1727242429221,
       "tag": "0007_past_boomerang",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1727282326805,
+      "tag": "0008_stiff_black_queen",
+      "breakpoints": true
     }
   ]
 }

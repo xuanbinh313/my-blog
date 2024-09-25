@@ -50,6 +50,7 @@ export const techs = pgTable("tags", {
   id: serial("id").primaryKey(),
   slug: text("slug").unique().notNull(),
   title: text("title").unique().notNull(),
+  link: text("link"),
   image: text("image").notNull(),
   content: text("content").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),

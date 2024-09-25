@@ -99,15 +99,30 @@ export type InputBlog = {
   title: Scalars['String']['input'];
 };
 
+export type InputTag = {
+  content: Scalars['String']['input'];
+  image: Scalars['String']['input'];
+  link?: InputMaybe<Scalars['String']['input']>;
+  slug: Scalars['String']['input'];
+  title: Scalars['String']['input'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createBlog: Blog;
+  createTag: Tag;
   updateBlog: Blog;
 };
 
 
 export type MutationCreateBlogArgs = {
   blog: InputBlog;
+};
+
+
+export type MutationCreateTagArgs = {
+  id: Scalars['ID']['input'];
+  payload: InputTag;
 };
 
 
@@ -185,6 +200,7 @@ export type Tag = {
   content: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   image: Scalars['String']['output'];
+  link?: Maybe<Scalars['String']['output']>;
   slug: Scalars['String']['output'];
   title: Scalars['String']['output'];
 };
@@ -340,14 +356,27 @@ export const GetTagsDocument = gql`
   }
 }
     `;
-export const GetTagDocument = gql`
-    query getTag($id: ID!) {
+export const GetTagByIdDocument = gql`
+    query getTagById($id: ID!) {
   tag(id: $id) {
     id
     slug
     title
     content
     image
+    link
+  }
+}
+    `;
+export const CreateTagDocument = gql`
+    mutation createTag($id: ID!, $payload: InputTag!) {
+  createTag(id: $id, payload: $payload) {
+    id
+    slug
+    title
+    content
+    image
+    link
   }
 }
     `;
@@ -389,8 +418,11 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     getTags(variables?: GetTagsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetTagsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetTagsQuery>(GetTagsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getTags', 'query', variables);
     },
-    getTag(variables: GetTagQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetTagQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetTagQuery>(GetTagDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getTag', 'query', variables);
+    getTagById(variables: GetTagByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetTagByIdQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetTagByIdQuery>(GetTagByIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getTagById', 'query', variables);
+    },
+    createTag(variables: CreateTagMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CreateTagMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateTagMutation>(CreateTagDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createTag', 'mutation', variables);
     }
   };
 }
@@ -458,9 +490,17 @@ export type GetTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetTagsQuery = { __typename?: 'Query', tags: Array<{ __typename?: 'Tag', id: number, slug: string, title: string, image: string, content: string }> };
 
-export type GetTagQueryVariables = Exact<{
+export type GetTagByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetTagQuery = { __typename?: 'Query', tag?: { __typename?: 'Tag', id: number, slug: string, title: string, content: string, image: string } | null };
+export type GetTagByIdQuery = { __typename?: 'Query', tag?: { __typename?: 'Tag', id: number, slug: string, title: string, content: string, image: string, link?: string | null } | null };
+
+export type CreateTagMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  payload: InputTag;
+}>;
+
+
+export type CreateTagMutation = { __typename?: 'Mutation', createTag: { __typename?: 'Tag', id: number, slug: string, title: string, content: string, image: string, link?: string | null } };
