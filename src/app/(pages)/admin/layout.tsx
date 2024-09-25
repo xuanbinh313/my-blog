@@ -1,6 +1,6 @@
 import { SidebarNav } from "@/components/side-navbar";
-import { Separator } from "@/components/ui/separator";
 import { Metadata } from "next";
+import { UserNav } from "./blog/components/user-nav";
 
 export const metadata: Metadata = {
   title: "Forms",
@@ -35,6 +35,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </aside>
         <div className="flex flex-col gap-y-7 max-w-3xl mx-auto w-full">
           {children}
+        </div>
+        <div>
+          <UserNav />
         </div>
       </div>
     </div>

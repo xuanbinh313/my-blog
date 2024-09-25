@@ -2,6 +2,8 @@ import { Metadata } from "next";
 
 import BlogsAdmin from "./components/blogs-admin";
 import { UserNav } from "./components/user-nav";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Blogs",
@@ -20,7 +22,9 @@ export default async function BlogsAdminPage() {
             </p>
           </div>
           <div className="flex items-center space-x-2">
-            <UserNav />
+            <Button asChild>
+              <Link href="/admin/blog/new">Add</Link>
+            </Button>
           </div>
         </div>
         <BlogsAdmin />

@@ -3,7 +3,6 @@
 import { client } from "@/app/utils/api";
 import RichTextEditor from "@/components/richtext-editor";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -27,7 +26,7 @@ const FRAMEWORKS = [
   {
     value: "javascript",
     label: "JavaScript",
-    id: 17
+    id: 17,
   },
   {
     value: "java",
@@ -42,9 +41,8 @@ const FRAMEWORKS = [
   {
     value: "reactjs",
     label: "ReactJS",
-    id: 20
+    id: 20,
   },
-  
 ];
 const FormSchema = z.object({
   slug: z.string().min(1, { message: "Slug is required" }),
@@ -56,9 +54,6 @@ const FormSchema = z.object({
     .array(z.object({ id: z.number(), title: z.string(), slug: z.string() }))
     .default([]),
 });
-const initialState = {
-  message: "",
-};
 
 const uploadImage = async (file: File) => {
   const formData = new FormData();
@@ -74,8 +69,9 @@ export default function CreateUpdateBlog() {
   const { data } = useQuery({
     queryKey: ["blog", slug],
     queryFn: async () => await client.blogBySlug({ slug }),
+    enabled: !!slug && slug !== "new",
   });
-  const [isEdit, setIsEdit] = useState(false);
+  const [isEdit, setIsEdit] = useState(!(!!slug && slug !== "new"));
   const [imagePreview, setImagePreview] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -89,7 +85,8 @@ export default function CreateUpdateBlog() {
       tags: [],
     },
   });
-  form.watch("tags")
+  // TODO: Test again
+  form.watch("tags");
   const onSubmit = async (blog: z.infer<typeof FormSchema>) => {
     // TODO: submit here
     console.log("update");
@@ -115,14 +112,14 @@ export default function CreateUpdateBlog() {
       setImagePreview(`/assets/${data?.blog?.image}`);
     }
   }, [data?.blog]);
-  console.log("ERRORS", form.formState.errors, form.getValues());
+  // console.log("ERRORS", form.formState.errors, form.getValues());
   const srcImage = file ? URL.createObjectURL(file) : imagePreview;
   return (
     <main className="flex flex-col gap-7 w-full">
       <div className="bg-destructive rounded-lg px-10 py-7 relative ">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <FormField
+            {/* <FormField
               control={form.control}
               name="slug"
               render={({ field }) => (
@@ -140,7 +137,7 @@ export default function CreateUpdateBlog() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <FormField
               control={form.control}
               name="title"
@@ -202,27 +199,36 @@ export default function CreateUpdateBlog() {
                   setFile(file[0]);
                 };
                 return (
-                  <FormItem>
+                  <FormItem className="relative">
                     <FormLabel className="text-muted-foreground">
                       Image
                     </FormLabel>
-                    {value && (
-                      <Image
-                        width={40}
-                        height={40}
-                        src={srcImage}
-                        alt={value || ""}
-                      />
-                    )}
-                    <FormControl className="dark:bg-zinc-700 bg-secondary">
-                      <Input
-                        {...rest}
-                        className="rounded-xl px-4 py-5"
-                        placeholder="Image"
-                        type="file"
-                        onChange={handleFile}
-                        disabled={!isEdit}
-                      />
+                    <div className="w-full border-0 relative p-5">
+                      <figure className="flex flex-col gap-2 h-40">
+                        {value && (
+                          <Image
+                            src={srcImage}
+                            alt={value || ""}
+                            layout="fill"
+                            objectFit="cover"
+                            objectPosition="center"
+                          />
+                        )}
+                      </figure>
+                    </div>
+                    <FormControl className="dark:bg-zinc-700 bg-secondary absolute top-6 right-0 rounded-full">
+                      <label>
+                        <input
+                          {...rest}
+                          onChange={handleFile}
+                          disabled={!isEdit}
+                          type="file"
+                          hidden
+                        />
+                        <div className="flex w-28 h-9 px-2 flex-col bg-indigo-600 rounded-full shadow text-white text-xs font-semibold leading-4 items-center justify-center cursor-pointer focus:outline-none">
+                          Choose File
+                        </div>
+                      </label>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -12,42 +12,7 @@ import {
 } from "@/components/ui/command";
 import { Command as CommandPrimitive } from "cmdk";
 
-export type Framework = Record<"value" | "label", string>;
-
-const FRAMEWORKS = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-  {
-    value: "wordpress",
-    label: "WordPress",
-  },
-  {
-    value: "express.js",
-    label: "Express.js",
-  },
-  {
-    value: "nest.js",
-    label: "Nest.js",
-  },
-] satisfies Framework[];
+export type Framework = Record<"value" | "label" | "id", string | number>;
 
 export interface FancyMultiSelectProps {
   selected: Framework[];
@@ -76,7 +41,7 @@ export function FancyMultiSelect({
           if (input.value === "") {
             const newSelected = [...selected];
             newSelected.pop();
-            console.log(newSelected,selected);
+            console.log(newSelected, selected);
             onSelectedChange(newSelected);
           }
         }
