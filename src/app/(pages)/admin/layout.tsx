@@ -20,6 +20,10 @@ const sidebarNavItems = [
     title: "Blog",
     href: "/admin/blog",
   },
+  {
+    title: "Tag",
+    href: "/admin/tag",
+  },
 ];
 
 interface AdminLayoutProps {

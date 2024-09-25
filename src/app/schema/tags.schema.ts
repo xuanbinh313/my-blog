@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID, Int, InputType } from "type-graphql";
+import { ObjectType, Field, ID, InputType } from "type-graphql";
 
 @ObjectType("Tag")
 export class Tag {
@@ -22,7 +22,7 @@ export class Tag {
 export class InputTag {
   @Field()
   slug!: string;
-  
+
   @Field()
   title!: string;
 

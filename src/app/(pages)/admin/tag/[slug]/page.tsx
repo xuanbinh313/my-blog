@@ -65,11 +65,11 @@ const uploadImage = async (file: File) => {
   });
 };
 
-export default function CreateUpdateBlog() {
+export default function CreateUpdateTag() {
   const { slug } = useParams<{ slug: string }>();
   const { data } = useQuery({
-    queryKey: ["blog", slug],
-    queryFn: async () => await client.blogBySlug({ slug }),
+    queryKey: ["tag", slug],
+    queryFn: async () => await client.getTag({ slug }),
     enabled: !!slug && slug !== "new",
   });
   const [isEdit, setIsEdit] = useState(!(!!slug && slug !== "new"));
@@ -81,10 +81,7 @@ export default function CreateUpdateBlog() {
       slug: "",
       title: "",
       image: "",
-      summary: "",
       content: "",
-      published: false,
-      tags: [],
     },
   });
   // TODO: Test again
@@ -96,7 +93,7 @@ export default function CreateUpdateBlog() {
       await uploadImage(file);
     }
     const tags = blog.tags.map((it) => it.id);
-    if (data?.blog?.image) {
+    if (data?.tag?.image) {
       client.updateBlog({ slug, blog: { ...blog, tags } });
     }
   };
@@ -109,11 +106,11 @@ export default function CreateUpdateBlog() {
     }
   };
   useEffect(() => {
-    if (data?.blog) {
-      form.reset(data?.blog);
-      setImagePreview(`/assets/${data?.blog?.image}`);
+    if (data?.tag) {
+      form.reset(data?.tag);
+      setImagePreview(`/assets/${data?.tag?.image}`);
     }
-  }, [data?.blog]);
+  }, [data?.tag]);
   // console.log("ERRORS", form.formState.errors, form.getValues());
   const srcImage = file ? URL.createObjectURL(file) : imagePreview;
   return (
