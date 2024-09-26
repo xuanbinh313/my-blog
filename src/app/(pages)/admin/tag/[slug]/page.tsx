@@ -1,8 +1,6 @@
 "use client";
 
 import { client } from "@/app/utils/api";
-import RichTextEditor from "@/components/richtext-editor";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,39 +10,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { FancyMultiSelect, Framework } from "@/components/ui/multi-select";
 import { Textarea } from "@/components/ui/textarea";
-import { Toggle } from "@/components/ui/toggle";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import { Check, PencilLine, Stamp } from "lucide-react";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-const FRAMEWORKS = [
-  {
-    value: "javascript",
-    label: "JavaScript",
-    id: 17,
-  },
-  {
-    value: "java",
-    label: "Java",
-    id: 19,
-  },
-  {
-    value: "python",
-    label: "Python",
-    id: 18,
-  },
-  {
-    value: "reactjs",
-    label: "ReactJS",
-    id: 20,
-  },
-];
+
 const FormSchema = z.object({
   slug: z.string().min(1, { message: "Slug is required" }),
   title: z.string().min(1, { message: "Title is required" }),
@@ -65,6 +39,7 @@ const uploadImage = async (file: File) => {
 export default function CreateUpdateTag() {
   const { slug } = useParams<{ slug: string }>();
   const [id, slugName] = slug.split("-");
+  const router = useRouter();
   console.log("ID", id, slugName);
   const { data } = useQuery({
     queryKey: ["tag", slug],
@@ -84,15 +59,30 @@ export default function CreateUpdateTag() {
       link: "",
     },
   });
-  // TODO: Test again
-  form.watch("tags");
+
   const onSubmit = async (tag: z.infer<typeof FormSchema>) => {
-    // TODO: submit here
-    console.log("update");
     if (file) {
       await uploadImage(file);
     }
-    client.createTag({ id: Number(id), payload: tag });
+    if (slug === "new") {
+      try {
+        const res = await client.createTag({ payload: tag });
+        console.log("RES", res);
+        if (res.createTag.success) {
+          router.push(`/admin/tag`);
+        }
+      } catch (error) {
+        console.log("ERROR", error);
+      }
+    }
+    try {
+      const res = await client.updateTag({ id: Number(id), payload: tag });
+        if (res.updateTag.success) {
+          router.push(`/admin/tag`);
+        }
+    } catch (error) {
+      console.log("ERROR", error);
+    }
   };
   const handleSubmit = () => {
     if (isEdit) {
@@ -108,7 +98,6 @@ export default function CreateUpdateTag() {
       setImagePreview(`/assets/${data?.tag?.image}`);
     }
   }, [data?.tag]);
-  // console.log("ERRORS", form.formState.errors, form.getValues());
   const srcImage = file ? URL.createObjectURL(file) : imagePreview;
   return (
     <main className="flex flex-col gap-7 w-full">
@@ -245,6 +234,7 @@ export default function CreateUpdateTag() {
                         placeholder="Link"
                         type="text"
                         {...field}
+                        value={field.value ?? ""}
                         disabled={!isEdit}
                       />
                     )}
@@ -253,7 +243,7 @@ export default function CreateUpdateTag() {
                 </FormItem>
               )}
             />
-            <div className="absolute top-0 right-0">
+            {/* <div className="absolute top-0 right-0">
               <div className="flex flex-row">
                 <FormField
                   control={form.control}
@@ -287,7 +277,7 @@ export default function CreateUpdateTag() {
                   )}
                 </Button>
               </div>
-            </div>
+            </div> */}
           </form>
         </Form>
       </div>

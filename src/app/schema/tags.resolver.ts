@@ -1,6 +1,6 @@
 import { Resolver, Query, Arg, ID, Mutation } from "type-graphql";
 
-import { InputTag, Tag } from "./tags.schema";
+import { InputTag, ResponseTag, Tag } from "./tags.schema";
 import { techs } from "@/db/schema";
 import { db } from "@/db/drizzle";
 import { eq, sql } from "drizzle-orm";
@@ -28,28 +28,29 @@ export class TagsResolver {
     return tagsRes;
   }
 
-  @Mutation(() => Tag)
-  async createTag(
+  @Mutation(() => ResponseTag)
+  async updateTag(
     @Arg("id", () => ID) id: number,
     @Arg("payload") tag: InputTag
-  ): Promise<Tag> {
-    console.log("id", id);
-    let init = { id: 0, slug: '', title: '', content: '', image: '', link: '' }; 
-    let result =  null
-    if (!id) {
-      result = await db.execute(sql`INSERT INTO ${techs} ${tag} RETURNING *`);
-    } else{
-      await db
-        .update(techs)
-        .set({
-          image: tag.image,
-          slug: tag.slug,
-          title: tag.title,
-          content: tag.content,
-          link: tag.link,
-        })
-        .where(eq(techs.id, id));
-    }
-    return result ? result.rows[0] as unknown as Tag : init;
+  ): Promise<ResponseTag> {
+    const result = await db.execute(sql`
+      UPDATE ${techs} 
+      SET title=${tag.title}, slug=${tag.slug}, content=${tag.content}, link=${tag.link}, image=${tag.image} 
+      WHERE id = ${id}`);
+    if (result.rowCount === 0) 
+      throw new Error("Tag update failed");
+    return { success: true };
+  }
+
+  @Mutation(() => ResponseTag)
+  async createTag(
+    @Arg("payload") tag: InputTag
+  ): Promise<ResponseTag> {
+    const result = await db.execute(
+      sql`INSERT INTO ${techs} (title, slug, content, link, image) VALUES(${tag.title}, ${tag.slug}, ${tag.content}, ${tag.link}, ${tag.image})`
+    );
+    if (result.rowCount === 0) 
+      throw new Error("Tag cannot create");
+    return { success: true };
   }
 }

@@ -18,13 +18,14 @@ query getTagById($id: ID!) {
   }
 }
 
-mutation createTag($id: ID!, $payload: InputTag!) {
-  createTag(id: $id, payload: $payload) {
-    id
-    slug
-    title
-    content
-    image
-    link
+mutation updateTag($id: ID!, $payload: InputTag!) {
+  updateTag(id: $id, payload: $payload) {
+    success
+  }
+}
+
+mutation createTag($payload: InputTag!) {
+  createTag(payload: $payload) {
+    success
   }
 }

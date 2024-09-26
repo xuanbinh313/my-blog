@@ -110,8 +110,9 @@ export type InputTag = {
 export type Mutation = {
   __typename?: 'Mutation';
   createBlog: Blog;
-  createTag: Tag;
+  createTag: ResponseTag;
   updateBlog: Blog;
+  updateTag: ResponseTag;
 };
 
 
@@ -121,7 +122,6 @@ export type MutationCreateBlogArgs = {
 
 
 export type MutationCreateTagArgs = {
-  id: Scalars['ID']['input'];
   payload: InputTag;
 };
 
@@ -129,6 +129,12 @@ export type MutationCreateTagArgs = {
 export type MutationUpdateBlogArgs = {
   blog: InputBlog;
   slug: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateTagArgs = {
+  id: Scalars['ID']['input'];
+  payload: InputTag;
 };
 
 export type Page = {
@@ -193,6 +199,11 @@ export type QueryProjectArgs = {
 
 export type QueryTagArgs = {
   id: Scalars['ID']['input'];
+};
+
+export type ResponseTag = {
+  __typename?: 'ResponseTag';
+  success: Scalars['Boolean']['output'];
 };
 
 export type Tag = {
@@ -368,15 +379,17 @@ export const GetTagByIdDocument = gql`
   }
 }
     `;
+export const UpdateTagDocument = gql`
+    mutation updateTag($id: ID!, $payload: InputTag!) {
+  updateTag(id: $id, payload: $payload) {
+    success
+  }
+}
+    `;
 export const CreateTagDocument = gql`
-    mutation createTag($id: ID!, $payload: InputTag!) {
-  createTag(id: $id, payload: $payload) {
-    id
-    slug
-    title
-    content
-    image
-    link
+    mutation createTag($payload: InputTag!) {
+  createTag(payload: $payload) {
+    success
   }
 }
     `;
@@ -420,6 +433,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getTagById(variables: GetTagByIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetTagByIdQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetTagByIdQuery>(GetTagByIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getTagById', 'query', variables);
+    },
+    updateTag(variables: UpdateTagMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<UpdateTagMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateTagMutation>(UpdateTagDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateTag', 'mutation', variables);
     },
     createTag(variables: CreateTagMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CreateTagMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateTagMutation>(CreateTagDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createTag', 'mutation', variables);
@@ -497,10 +513,17 @@ export type GetTagByIdQueryVariables = Exact<{
 
 export type GetTagByIdQuery = { __typename?: 'Query', tag?: { __typename?: 'Tag', id: number, slug: string, title: string, content: string, image: string, link?: string | null } | null };
 
-export type CreateTagMutationVariables = Exact<{
+export type UpdateTagMutationVariables = Exact<{
   id: Scalars['ID']['input'];
   payload: InputTag;
 }>;
 
 
-export type CreateTagMutation = { __typename?: 'Mutation', createTag: { __typename?: 'Tag', id: number, slug: string, title: string, content: string, image: string, link?: string | null } };
+export type UpdateTagMutation = { __typename?: 'Mutation', updateTag: { __typename?: 'ResponseTag', success: boolean } };
+
+export type CreateTagMutationVariables = Exact<{
+  payload: InputTag;
+}>;
+
+
+export type CreateTagMutation = { __typename?: 'Mutation', createTag: { __typename?: 'ResponseTag', success: boolean } };

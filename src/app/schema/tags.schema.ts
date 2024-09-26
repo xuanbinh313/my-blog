@@ -38,3 +38,9 @@ export class InputTag {
   @Field(() => String)
   image: string;
 }
+
+@ObjectType("ResponseTag")
+export class ResponseTag {
+  @Field(() => Boolean)
+  success!: boolean;
+}
