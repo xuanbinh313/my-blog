@@ -11,6 +11,8 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Command as CommandPrimitive } from "cmdk";
+import { useQuery } from "@tanstack/react-query";
+import { client } from "@/app/utils/api";
 
 export type Framework = Record<"value" | "label" | "id", string | number>;
 
@@ -128,5 +130,63 @@ export function FancyMultiSelect({
         </CommandList>
       </div>
     </Command>
+  );
+}
+interface SelectQueryProps {
+  type: keyof typeof client;
+  variables?: any; // Adjust the type as needed
+  placeholder?: string;
+  selected: (number | string | undefined)[];
+  onSelectedChange: (selected: (number | string | undefined)[]) => void;
+  nameLabel?: string;
+  nameValue?: string;
+  typeValue?: string;
+}
+export function SelectQueryMulti({
+  onSelectedChange,
+  selected = [],
+  variables,
+  type,
+  nameLabel = "title",
+  nameValue = "slug",
+  typeValue = "string",
+}: SelectQueryProps) {
+  const { data } = useQuery({
+    queryKey: ["SelectQueryMulti", type, variables],
+    queryFn: async () => {
+      const result = await client[type](variables);
+      return (result as Record<string, any[]>)[type];
+    },
+  });
+  const handleSelected = (val: Framework[]) => {
+    onSelectedChange &&
+      onSelectedChange(
+        val.map((it) => (typeValue === "number" ? Number(it.value) : it.value))
+      );
+  };
+  const opts =
+    data?.map((it) => ({
+      label: it[nameLabel],
+      value: it[nameValue].toString(),
+      id: it.id,
+    })) || [];
+  const value = selected.map((it) => {
+    const found = opts.find((o) =>
+      typeValue === "number" ? Number(o.value) === it : o.value === it
+    );
+    return (
+      found || {
+        label: "No Label",
+        value: it,
+        id: it,
+      }
+    );
+  });
+  return (
+    <FancyMultiSelect
+      onSelectedChange={handleSelected}
+      selected={value}
+      options={opts}
+    />
   );
 }

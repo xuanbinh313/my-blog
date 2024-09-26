@@ -1,41 +1,15 @@
 import { ObjectType, Field, ID } from "type-graphql";
+import { Hero } from "./heros.schema";
+import { Block } from "./blocks.schema";
 
-@ObjectType("Block")
-export class Block {
-  @Field(() => ID)
-  value!: string;
 
-  @Field(() => String)
-  type!: string;
-
-  @Field(() => String)
-  name!: string;
-}
-
-@ObjectType("Hero")
-export class Hero {
-  @Field(() => ID)
-  type!: string;
-
-  @Field(() => String)
-  image!: string;
-
-  @Field(() => String)
-  title!: string;
-
-  @Field(() => String)
-  subtitle: string | null = null;
-
-  @Field(() => String)
-  content: string | null = null;
-}
 
 @ObjectType("Page")
 export class Page {
   @Field(() => ID)
   id!: string;
 
-  @Field(() => ID)
+  @Field(() => String)
   slug!: string;
 
   @Field(() => String)
@@ -60,13 +34,16 @@ export class Page {
 @ObjectType("PageAdmin")
 export class PageAdmin {
   @Field(() => ID)
-  id!: string;
+  id!: number;
 
   @Field(() => ID)
   slug!: string;
 
   @Field(() => String)
   title!: string;
+
+  @Field(() => ID)
+  heroId!: number;
 
   @Field(() => String)
   createdDate!: Date;

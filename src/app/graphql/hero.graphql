@@ -1,0 +1,10 @@
+query getHeros {
+  getHeros {
+    id
+    type
+    image
+    title
+    subtitle
+    content
+  }
+}

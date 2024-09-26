@@ -1,4 +1,4 @@
-import { Resolver, Query, Arg } from "type-graphql";
+import { Resolver, Query, Arg, Mutation } from "type-graphql";
 
 import { Page, PageAdmin } from "./pages.schema";
 import { db } from "@/db/drizzle";
@@ -15,7 +15,7 @@ export class PagesResolver {
       .select()
       .from(pages)
       .innerJoin(heros, eq(pages.hero, heros.id))
-      .where(eq(pages.slug, slug));
+      .where(sql`slug=${slug}`); // slug or id
     if (!page.length) {
       throw new Error("Page not found");
     }
@@ -31,6 +31,7 @@ export class PagesResolver {
     return {
       ...pagesRes,
       hero: {
+        id: herosRes.id,
         type: herosRes.type,
         image: herosRes.image,
         title: herosRes.title,
@@ -39,8 +40,8 @@ export class PagesResolver {
       },
       blocks: pageBlocksData.map(({ blocks }) => ({
         type: blocks.type,
-        name: blocks.title,
-        value: blocks.endpoint, // or any other field you want to use
+        title: blocks.title,
+        endpoint: blocks.endpoint, // or any other field you want to use
       })),
       createdDate: pagesRes.createdAt,
       updatedDate: pagesRes.updatedAt, // Make sure to add updatedAt field to schema if you need it
@@ -50,10 +51,18 @@ export class PagesResolver {
   @Query(() => [Page])
   async getPages(): Promise<PageAdmin[]> {
     const result = await db.execute(sql`
-      SELECT id,slug,title 
+      SELECT id,slug,title,hero_id
       FROM ${pages}`);
-    console.log(result);
-    
     return result.rows as unknown as PageAdmin[]
+  }
+  
+  @Mutation(() => PageAdmin)
+  async createPage(): Promise<PageAdmin> {
+    const result = await db.execute(sql`
+      INSERT INTO ${pages} (slug, title, hero_id)
+      VALUES ('new-page', 'New Page', 1)
+      RETURNING id, slug, title, hero_id
+    `);
+    return result.rows[0] as PageAdmin;
   }
 }

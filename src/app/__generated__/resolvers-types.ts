@@ -19,9 +19,10 @@ export type Scalars = {
 
 export type Block = {
   __typename?: 'Block';
-  name: Scalars['String']['output'];
+  endpoint: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  title: Scalars['String']['output'];
   type: Scalars['String']['output'];
-  value: Scalars['ID']['output'];
 };
 
 export type BlockProject = {
@@ -53,10 +54,11 @@ export type HeaderItem = {
 export type Hero = {
   __typename?: 'Hero';
   content: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
   image: Scalars['String']['output'];
   subtitle: Scalars['String']['output'];
   title: Scalars['String']['output'];
-  type: Scalars['ID']['output'];
+  type: Scalars['String']['output'];
 };
 
 export type HeroProject = {
@@ -89,6 +91,7 @@ export type InputTag = {
 export type Mutation = {
   __typename?: 'Mutation';
   createBlog: Blog;
+  createPage: PageAdmin;
   createTag: ResponseTag;
   updateBlog: Blog;
   updateTag: ResponseTag;
@@ -123,6 +126,17 @@ export type Page = {
   hero: Hero;
   id: Scalars['ID']['output'];
   published: Scalars['Boolean']['output'];
+  slug: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  updatedDate: Scalars['String']['output'];
+};
+
+export type PageAdmin = {
+  __typename?: 'PageAdmin';
+  createdDate: Scalars['String']['output'];
+  heroId: Scalars['ID']['output'];
+  id: Scalars['ID']['output'];
+  published: Scalars['Boolean']['output'];
   slug: Scalars['ID']['output'];
   title: Scalars['String']['output'];
   updatedDate: Scalars['String']['output'];
@@ -144,8 +158,12 @@ export type Query = {
   __typename?: 'Query';
   blog?: Maybe<Blog>;
   blogs: Array<Blog>;
+  getBlock?: Maybe<Block>;
+  getBlocks: Array<Block>;
+  getHeros: Array<Hero>;
   getPages: Array<Page>;
   headers: Array<HeaderItem>;
+  hero?: Maybe<Hero>;
   page?: Maybe<Page>;
   project?: Maybe<Project>;
   projects: Array<Project>;
@@ -156,6 +174,16 @@ export type Query = {
 
 export type QueryBlogArgs = {
   slug: Scalars['String']['input'];
+};
+
+
+export type QueryGetBlockArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryHeroArgs = {
+  type: Scalars['String']['input'];
 };
 
 
@@ -189,6 +217,26 @@ export type Tag = {
 };
 
 
+export const GetBlocksDocument = gql`
+    query getBlocks {
+  getBlocks {
+    id
+    type
+    title
+    endpoint
+  }
+}
+    `;
+export const GetBlockDocument = gql`
+    query getBlock($id: ID!) {
+  getBlock(id: $id) {
+    id
+    type
+    title
+    endpoint
+  }
+}
+    `;
 export const GetBlogsDocument = gql`
     query getBlogs {
   blogs {
@@ -258,6 +306,18 @@ export const GetHeadersDocument = gql`
   }
 }
     `;
+export const GetHerosDocument = gql`
+    query getHeros {
+  getHeros {
+    id
+    type
+    image
+    title
+    subtitle
+    content
+  }
+}
+    `;
 export const GetPagesDocument = gql`
     query getPages {
   getPages {
@@ -273,6 +333,7 @@ export const GetPageDocument = gql`
     slug
     title
     hero {
+      id
       type
       image
       title
@@ -280,9 +341,10 @@ export const GetPageDocument = gql`
       content
     }
     blocks {
-      name
-      value
+      id
+      title
       type
+      endpoint
     }
   }
 }
@@ -352,6 +414,12 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationTy
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    getBlocks(variables?: GetBlocksQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetBlocksQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetBlocksQuery>(GetBlocksDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getBlocks', 'query', variables);
+    },
+    getBlock(variables: GetBlockQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetBlockQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetBlockQuery>(GetBlockDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getBlock', 'query', variables);
+    },
     getBlogs(variables?: GetBlogsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetBlogsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetBlogsQuery>(GetBlogsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getBlogs', 'query', variables);
     },
@@ -366,6 +434,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getHeaders(variables?: GetHeadersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetHeadersQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetHeadersQuery>(GetHeadersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getHeaders', 'query', variables);
+    },
+    getHeros(variables?: GetHerosQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetHerosQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetHerosQuery>(GetHerosDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getHeros', 'query', variables);
     },
     getPages(variables?: GetPagesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetPagesQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetPagesQuery>(GetPagesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getPages', 'query', variables);
@@ -391,6 +462,18 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;
+export type GetBlocksQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetBlocksQuery = { __typename?: 'Query', getBlocks: Array<{ __typename?: 'Block', id: number, type: string, title: string, endpoint: string }> };
+
+export type GetBlockQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetBlockQuery = { __typename?: 'Query', getBlock?: { __typename?: 'Block', id: number, type: string, title: string, endpoint: string } | null };
+
 export type GetBlogsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -423,17 +506,22 @@ export type GetHeadersQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetHeadersQuery = { __typename?: 'Query', headers: Array<{ __typename?: 'HeaderItem', slug: number, name: string }> };
 
+export type GetHerosQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetHerosQuery = { __typename?: 'Query', getHeros: Array<{ __typename?: 'Hero', id: number, type: string, image: string, title: string, subtitle: string, content: string }> };
+
 export type GetPagesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetPagesQuery = { __typename?: 'Query', getPages: Array<{ __typename?: 'Page', id: number, slug: number, title: string }> };
+export type GetPagesQuery = { __typename?: 'Query', getPages: Array<{ __typename?: 'Page', id: number, slug: string, title: string }> };
 
 export type GetPageQueryVariables = Exact<{
   slug: Scalars['String']['input'];
 }>;
 
 
-export type GetPageQuery = { __typename?: 'Query', page?: { __typename?: 'Page', slug: number, title: string, hero: { __typename?: 'Hero', type: number, image: string, title: string, subtitle: string, content: string }, blocks: Array<{ __typename?: 'Block', name: string, value: number, type: string }> } | null };
+export type GetPageQuery = { __typename?: 'Query', page?: { __typename?: 'Page', slug: string, title: string, hero: { __typename?: 'Hero', id: number, type: string, image: string, title: string, subtitle: string, content: string }, blocks: Array<{ __typename?: 'Block', id: number, title: string, type: string, endpoint: string }> } | null };
 
 export type GetProjectQueryVariables = Exact<{
   slug: Scalars['String']['input'];

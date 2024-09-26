@@ -15,3 +15,11 @@ export const queryClient = new QueryClient({
     },
   },
 });
+export const uploadImage = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  await fetch("/api/upload", {
+    method: "POST",
+    body: formData,
+  });
+};

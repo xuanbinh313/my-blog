@@ -1,0 +1,16 @@
+query getBlocks {
+  getBlocks {
+    id
+    type
+    title
+    endpoint
+  }
+}
+query getBlock($id: ID!) {
+  getBlock(id: $id) {
+    id
+    type
+    title
+    endpoint
+  }
+}

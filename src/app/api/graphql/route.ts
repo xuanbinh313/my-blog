@@ -8,6 +8,8 @@ import { HeadersResolver } from "@/app/schema/headers.resolver";
 import { PagesResolver } from "@/app/schema/pages.resolver";
 import { ProjectsResolver } from "@/app/schema/projects.resolver";
 import { TagsResolver } from "@/app/schema/tags.resolver";
+import { HeroResolver } from "@/app/schema/heros.resolver";
+import { BlockResolver } from "@/app/schema/blocks.resolver";
 
 const schema = await buildSchema({
   resolvers: [
@@ -16,6 +18,8 @@ const schema = await buildSchema({
     PagesResolver,
     ProjectsResolver,
     TagsResolver,
+    HeroResolver,
+    BlockResolver
   ],
   validate: true
 });

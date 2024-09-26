@@ -11,16 +11,18 @@ query getPage($slug: String!) {
     slug
     title
     hero {
-        type
-        image
-        title
-        subtitle
-        content
+      id
+      type
+      image
+      title
+      subtitle
+      content
     }
     blocks {
-      name
-      value
+      id
+      title
       type
+      endpoint
     }
   }
 }
