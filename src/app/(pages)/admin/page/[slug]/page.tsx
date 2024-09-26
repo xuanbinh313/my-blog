@@ -35,12 +35,12 @@ const uploadImage = async (file: File) => {
   });
 };
 
-export default function CreateUpdateTag() {
+export default function CreateUpdatePage() {
   const { slug } = useParams<{ slug: string }>();
   const [id] = slug.split("-");
   const router = useRouter();
   const { data } = useQuery({
-    queryKey: ["tag", slug],
+    queryKey: ["page", slug],
     queryFn: async () => await client.getTagById({ id: Number(id) }),
     enabled: !!slug && slug !== "new",
   });

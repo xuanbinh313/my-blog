@@ -56,3 +56,24 @@ export class Page {
   @Field(() => Boolean)
   published: Boolean = false;
 }
+
+@ObjectType("PageAdmin")
+export class PageAdmin {
+  @Field(() => ID)
+  id!: string;
+
+  @Field(() => ID)
+  slug!: string;
+
+  @Field(() => String)
+  title!: string;
+
+  @Field(() => String)
+  createdDate!: Date;
+
+  @Field(() => String)
+  updatedDate!: Date;
+
+  @Field(() => Boolean)
+  published: Boolean = false;
+}

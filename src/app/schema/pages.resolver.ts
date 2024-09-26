@@ -1,8 +1,6 @@
-import { version } from "./../../../node_modules/esbuild/lib/main.d";
 import { Resolver, Query, Arg } from "type-graphql";
 
-import pagesData from "./pages.json";
-import { Page } from "./pages.schema";
+import { Page, PageAdmin } from "./pages.schema";
 import { db } from "@/db/drizzle";
 import { eq, sql } from "drizzle-orm";
 import { blocks, heros, pageBlocks, pages } from "@/db/schema";
@@ -50,7 +48,12 @@ export class PagesResolver {
   }
 
   @Query(() => [Page])
-  pages(): Page[] {
-    return pagesData;
+  async getPages(): Promise<PageAdmin[]> {
+    const result = await db.execute(sql`
+      SELECT id,slug,title 
+      FROM ${pages}`);
+    console.log(result);
+    
+    return result.rows as unknown as PageAdmin[]
   }
 }

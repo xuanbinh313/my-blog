@@ -1,3 +1,11 @@
+query getPages {
+  getPages {
+    id
+    slug
+    title
+  }
+}
+
 query getPage($slug: String!) {
   page(slug: $slug) {
     slug
@@ -16,3 +24,25 @@ query getPage($slug: String!) {
     }
   }
 }
+# query getPageById($id: ID!) {
+#   pageById(id: $id) {
+#     id
+#     slug
+#     title
+#     content
+#     image
+#     link
+#   }
+# }
+
+# mutation updatePage($id: ID!, $payload: InputTag!) {
+#   updatePage(id: $id, payload: $payload) {
+#     success
+#   }
+# }
+
+# mutation createPage($payload: InputTag!) {
+#   createPage(payload: $payload) {
+#     success
+#   }
+# }
