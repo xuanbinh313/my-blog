@@ -44,6 +44,5 @@ export async function BlogList() {
     queryKey: ["blogs"],
     queryFn: async () => await client.getBlogs(),
   });
-  console.log("BLOGS", blogs);
   return blogs.map((blog) => <CardBlog key={blog.slug} {...blog} />);
 }

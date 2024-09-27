@@ -35,7 +35,7 @@ export type BlockProject = {
 export type Blog = {
   __typename?: 'Blog';
   content: Scalars['String']['output'];
-  createdDate: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   image: Scalars['String']['output'];
   published: Scalars['Boolean']['output'];
@@ -44,14 +44,14 @@ export type Blog = {
   summary: Scalars['String']['output'];
   tags: Array<Tag>;
   title: Scalars['String']['output'];
-  updatedDate?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['String']['output']>;
 };
 
 export type HeaderItem = {
   __typename?: 'HeaderItem';
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
-  slug: Scalars['ID']['output'];
+  slug: Scalars['String']['output'];
 };
 
 export type Hero = {
@@ -544,7 +544,7 @@ export type UpdateBlogMutation = { __typename?: 'Mutation', updateBlog: { __type
 export type GetHeadersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetHeadersQuery = { __typename?: 'Query', headers: Array<{ __typename?: 'HeaderItem', slug: number, name: string }> };
+export type GetHeadersQuery = { __typename?: 'Query', headers: Array<{ __typename?: 'HeaderItem', slug: string, name: string }> };
 
 export type GetHerosQueryVariables = Exact<{ [key: string]: never; }>;
 

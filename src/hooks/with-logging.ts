@@ -5,7 +5,6 @@ export const withLogging = (
 ) => {
   return async (req: NextRequest) => {
     // Call the handler and get the response
-    console.log(req.body);
     const res = await handler(req);
     // Extract request body
     let requestBody = "";

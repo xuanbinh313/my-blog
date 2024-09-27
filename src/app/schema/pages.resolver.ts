@@ -77,7 +77,6 @@ export class PagesResolver {
   //   @Arg("slug") slug: string,
   //   @Arg("page") page: PageAdmin
   // ): Promise<PageAdmin> {
-  //   console.log("UPDATE PAGE ----------------------------------", slug, page);
   //   // const result = await db.execute(sql`
   //   //   INSERT INTO ${pages} (slug, title, hero_id)
   //   //   VALUES (${page.slug}, ${page.title}, ${page.heroId})

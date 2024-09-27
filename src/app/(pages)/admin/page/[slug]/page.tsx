@@ -59,7 +59,6 @@ export default function CreateUpdatePage() {
   });
 
   const onSubmit = async (page: z.infer<typeof FormSchema>) => {
-    console.log("tag", page);
 
     if (id === "new") {
       try {

@@ -162,7 +162,6 @@ export function SelectQueryMulti({
       return (result as Record<string, any[]>)[type];
     },
   });
-  console.log("selected", selected);
   const handleSelected = (val: Framework[]) => {
     onSelectedChange &&
       onSelectedChange(

@@ -43,7 +43,6 @@ export class BlogsResolver {
       }
       return pre;
     }, {});
-      console.log("result--------------------", Object.values(data));
     return Object.values(data);
   }
   @Query(() => [Blog])
@@ -65,7 +64,6 @@ export class BlogsResolver {
       }
       return pre;
     }, {});
-      console.log("result--------------------", Object.values(data));
     return Object.values(data);
   }
   @Mutation(() => Blog)
