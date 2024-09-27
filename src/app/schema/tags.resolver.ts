@@ -1,9 +1,9 @@
-import { Resolver, Query, Arg, ID, Mutation } from "type-graphql";
+import { Arg, ID, Mutation, Query, Resolver } from "type-graphql";
 
-import { InputTag, ResponseTag, Tag } from "./tags.schema";
-import { techs } from "@/db/schema";
 import { db } from "@/db/drizzle";
-import { eq, sql } from "drizzle-orm";
+import { techs } from "@/db/schema";
+import { sql } from "drizzle-orm";
+import { InputTag, ResponseTag, Tag } from "./tags.schema";
 
 @Resolver(Tag)
 export class TagsResolver {
@@ -23,7 +23,7 @@ export class TagsResolver {
   }
 
   @Query(() => [Tag])
-  async tags(): Promise<Tag[]> {
+  async getTags(): Promise<Tag[]> {
     const tagsRes = await db.select().from(techs);
     return tagsRes;
   }

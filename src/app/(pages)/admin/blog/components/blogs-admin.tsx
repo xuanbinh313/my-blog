@@ -8,7 +8,7 @@ import { DataTable } from "@/components/data-table/data-table";
 export default function BlogsAdmin() {
   const { data } = useSuspenseQuery({
     queryKey: ["blogs", "admin"],
-    queryFn: async () => (await client.getBlogs()).blogs,
+    queryFn: async () => (await client.getBlogsAdmin()).blogsAdmin,
   });
   return (
     <DataTable<GetBlogsQuery["blogs"][number], unknown>

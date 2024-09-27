@@ -8,10 +8,10 @@ import { columns } from "./columns";
 export default function TagsAdmin() {
   const { data } = useSuspenseQuery({
     queryKey: ["tags", "admin"],
-    queryFn: async () => (await client.getTags()).tags,
+    queryFn: async () => (await client.getTags()).getTags,
   });
   return (
-    <DataTable<GetTagsQuery["tags"][number], unknown>
+    <DataTable<GetTagsQuery["getTags"][number], unknown>
       data={data}
       columns={columns}
     />

@@ -8,6 +8,7 @@ query getPages {
 
 query getPage($slug: String!) {
   page(slug: $slug) {
+    id
     slug
     title
     hero {
@@ -43,8 +44,8 @@ query getPage($slug: String!) {
 #   }
 # }
 
-# mutation createPage($payload: InputTag!) {
-#   createPage(payload: $payload) {
-#     success
-#   }
-# }
+mutation createPage($payload: InputPage!) {
+  createPage(payload: $payload) {
+    success
+  }
+}

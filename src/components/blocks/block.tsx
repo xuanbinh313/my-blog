@@ -8,7 +8,7 @@ import CardProject from "./card-project";
 import { ContactForm } from "./contact-form";
 import { ToolList } from "./card-tool";
 
-const type: { [key: string]: React.ComponentType<any> } = {
+const type: { [key: string]: React.ComponentType<Block> } = {
   blogs: BlogList,
   project: CardProject,
   cta: ContactForm,
@@ -29,9 +29,9 @@ const Block = ({ blocks }: BlockProps) => {
   return (
     <>
       {blocks?.map((block) => (
-        <ArticleComponent key={block.value}>
+        <ArticleComponent key={block.type}>
           <BackgroundComponent />
-          <H2 className="text-primary">{block.name}</H2>
+          <H2 className="text-primary">{block.title}</H2>
           <BlockItem block={block} />
         </ArticleComponent>
       ))}

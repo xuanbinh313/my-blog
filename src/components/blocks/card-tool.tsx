@@ -28,13 +28,13 @@ const CardTool: React.FC<{ data: Tag }> = ({ data }) => {
 };
 export async function ToolList() {
   const queryClient = getQueryClient();
-  const { tags } = await queryClient.fetchQuery({
+  const { getTags } = await queryClient.fetchQuery({
     queryKey: ["techs"],
     queryFn: async () => await client.getTags(),
   });
   return (
     <div className="grid grid-cols-2 gap-5 w-full">
-      {tags.map((tag) => (
+      {getTags.map((tag) => (
         <CardTool key={tag.slug} data={tag} />
       ))}
     </div>

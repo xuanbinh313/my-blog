@@ -1,5 +1,5 @@
-import { ObjectType, Field, ID, InputType, Int } from "type-graphql";
-import { Tag, InputTag } from "./tags.schema";
+import { Field, ID, InputType, ObjectType } from "type-graphql";
+import { Tag } from "./tags.schema";
 
 
 @ObjectType("Blog")
@@ -25,6 +25,15 @@ export class Blog {
   @Field(() => String)
   image: string;
 
+  @Field(() => String)
+  createdAt!: Date;
+
+  @Field(() => String, { nullable: true })
+  updatedAt!: Date | null;
+
+  @Field(() => String, { nullable: true })
+  publishedAt!: Date | null;
+  
   @Field(() => Boolean)
   published: boolean = false;
 }

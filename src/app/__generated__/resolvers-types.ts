@@ -35,13 +35,16 @@ export type BlockProject = {
 export type Blog = {
   __typename?: 'Blog';
   content: Scalars['String']['output'];
+  createdDate: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   image: Scalars['String']['output'];
   published: Scalars['Boolean']['output'];
+  publishedAt?: Maybe<Scalars['String']['output']>;
   slug: Scalars['String']['output'];
   summary: Scalars['String']['output'];
   tags: Array<Tag>;
   title: Scalars['String']['output'];
+  updatedDate?: Maybe<Scalars['String']['output']>;
 };
 
 export type HeaderItem = {
@@ -80,6 +83,14 @@ export type InputBlog = {
   title: Scalars['String']['input'];
 };
 
+export type InputPage = {
+  blocks: Array<Scalars['Float']['input']>;
+  heroId: Scalars['ID']['input'];
+  published?: Scalars['Boolean']['input'];
+  slug: Scalars['String']['input'];
+  title: Scalars['String']['input'];
+};
+
 export type InputTag = {
   content: Scalars['String']['input'];
   image: Scalars['String']['input'];
@@ -91,15 +102,20 @@ export type InputTag = {
 export type Mutation = {
   __typename?: 'Mutation';
   createBlog: Blog;
-  createPage: PageAdmin;
+  createPage: ResponseBase;
   createTag: ResponseTag;
-  updateBlog: Blog;
+  updateBlog: ResponseBase;
   updateTag: ResponseTag;
 };
 
 
 export type MutationCreateBlogArgs = {
   blog: InputBlog;
+};
+
+
+export type MutationCreatePageArgs = {
+  payload: InputPage;
 };
 
 
@@ -126,20 +142,10 @@ export type Page = {
   hero: Hero;
   id: Scalars['ID']['output'];
   published: Scalars['Boolean']['output'];
+  publishedAt?: Maybe<Scalars['String']['output']>;
   slug: Scalars['String']['output'];
   title: Scalars['String']['output'];
-  updatedDate: Scalars['String']['output'];
-};
-
-export type PageAdmin = {
-  __typename?: 'PageAdmin';
-  createdDate: Scalars['String']['output'];
-  heroId: Scalars['ID']['output'];
-  id: Scalars['ID']['output'];
-  published: Scalars['Boolean']['output'];
-  slug: Scalars['ID']['output'];
-  title: Scalars['String']['output'];
-  updatedDate: Scalars['String']['output'];
+  updatedDate?: Maybe<Scalars['String']['output']>;
 };
 
 export type Project = {
@@ -158,17 +164,18 @@ export type Query = {
   __typename?: 'Query';
   blog?: Maybe<Blog>;
   blogs: Array<Blog>;
+  blogsAdmin: Array<Blog>;
   getBlock?: Maybe<Block>;
   getBlocks: Array<Block>;
   getHeros: Array<Hero>;
   getPages: Array<Page>;
+  getTags: Array<Tag>;
   headers: Array<HeaderItem>;
   hero?: Maybe<Hero>;
   page?: Maybe<Page>;
   project?: Maybe<Project>;
   projects: Array<Project>;
   tag?: Maybe<Tag>;
-  tags: Array<Tag>;
 };
 
 
@@ -199,6 +206,11 @@ export type QueryProjectArgs = {
 
 export type QueryTagArgs = {
   id: Scalars['ID']['input'];
+};
+
+export type ResponseBase = {
+  __typename?: 'ResponseBase';
+  success: Scalars['Boolean']['output'];
 };
 
 export type ResponseTag = {
@@ -244,6 +256,22 @@ export const GetBlogsDocument = gql`
     title
     slug
     summary
+    publishedAt
+    tags {
+      slug
+      title
+    }
+  }
+}
+    `;
+export const GetBlogsAdminDocument = gql`
+    query getBlogsAdmin {
+  blogsAdmin {
+    image
+    title
+    slug
+    summary
+    publishedAt
     tags {
       slug
       title
@@ -265,6 +293,7 @@ export const BlogBySlugDocument = gql`
       title
     }
     published
+    publishedAt
   }
 }
     `;
@@ -286,15 +315,7 @@ export const CreateBlogDocument = gql`
 export const UpdateBlogDocument = gql`
     mutation updateBlog($slug: String!, $blog: InputBlog!) {
   updateBlog(slug: $slug, blog: $blog) {
-    title
-    summary
-    content
-    image
-    tags {
-      slug
-      title
-    }
-    published
+    success
   }
 }
     `;
@@ -330,6 +351,7 @@ export const GetPagesDocument = gql`
 export const GetPageDocument = gql`
     query getPage($slug: String!) {
   page(slug: $slug) {
+    id
     slug
     title
     hero {
@@ -346,6 +368,13 @@ export const GetPageDocument = gql`
       type
       endpoint
     }
+  }
+}
+    `;
+export const CreatePageDocument = gql`
+    mutation createPage($payload: InputPage!) {
+  createPage(payload: $payload) {
+    success
   }
 }
     `;
@@ -371,7 +400,7 @@ export const GetProjectDocument = gql`
     `;
 export const GetTagsDocument = gql`
     query getTags {
-  tags {
+  getTags {
     id
     slug
     title
@@ -423,6 +452,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     getBlogs(variables?: GetBlogsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetBlogsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetBlogsQuery>(GetBlogsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getBlogs', 'query', variables);
     },
+    getBlogsAdmin(variables?: GetBlogsAdminQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetBlogsAdminQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetBlogsAdminQuery>(GetBlogsAdminDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getBlogsAdmin', 'query', variables);
+    },
     blogBySlug(variables: BlogBySlugQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<BlogBySlugQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<BlogBySlugQuery>(BlogBySlugDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'blogBySlug', 'query', variables);
     },
@@ -443,6 +475,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getPage(variables: GetPageQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetPageQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetPageQuery>(GetPageDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getPage', 'query', variables);
+    },
+    createPage(variables: CreatePageMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CreatePageMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreatePageMutation>(CreatePageDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createPage', 'mutation', variables);
     },
     getProject(variables: GetProjectQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetProjectQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetProjectQuery>(GetProjectDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getProject', 'query', variables);
@@ -477,14 +512,19 @@ export type GetBlockQuery = { __typename?: 'Query', getBlock?: { __typename?: 'B
 export type GetBlogsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetBlogsQuery = { __typename?: 'Query', blogs: Array<{ __typename?: 'Blog', image: string, title: string, slug: string, summary: string, tags: Array<{ __typename?: 'Tag', slug: string, title: string }> }> };
+export type GetBlogsQuery = { __typename?: 'Query', blogs: Array<{ __typename?: 'Blog', image: string, title: string, slug: string, summary: string, publishedAt?: string | null, tags: Array<{ __typename?: 'Tag', slug: string, title: string }> }> };
+
+export type GetBlogsAdminQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetBlogsAdminQuery = { __typename?: 'Query', blogsAdmin: Array<{ __typename?: 'Blog', image: string, title: string, slug: string, summary: string, publishedAt?: string | null, tags: Array<{ __typename?: 'Tag', slug: string, title: string }> }> };
 
 export type BlogBySlugQueryVariables = Exact<{
   slug: Scalars['String']['input'];
 }>;
 
 
-export type BlogBySlugQuery = { __typename?: 'Query', blog?: { __typename?: 'Blog', slug: string, title: string, summary: string, content: string, image: string, published: boolean, tags: Array<{ __typename?: 'Tag', id: number, slug: string, title: string }> } | null };
+export type BlogBySlugQuery = { __typename?: 'Query', blog?: { __typename?: 'Blog', slug: string, title: string, summary: string, content: string, image: string, published: boolean, publishedAt?: string | null, tags: Array<{ __typename?: 'Tag', id: number, slug: string, title: string }> } | null };
 
 export type CreateBlogMutationVariables = Exact<{
   blog: InputBlog;
@@ -499,7 +539,7 @@ export type UpdateBlogMutationVariables = Exact<{
 }>;
 
 
-export type UpdateBlogMutation = { __typename?: 'Mutation', updateBlog: { __typename?: 'Blog', title: string, summary: string, content: string, image: string, published: boolean, tags: Array<{ __typename?: 'Tag', slug: string, title: string }> } };
+export type UpdateBlogMutation = { __typename?: 'Mutation', updateBlog: { __typename?: 'ResponseBase', success: boolean } };
 
 export type GetHeadersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -521,7 +561,14 @@ export type GetPageQueryVariables = Exact<{
 }>;
 
 
-export type GetPageQuery = { __typename?: 'Query', page?: { __typename?: 'Page', slug: string, title: string, hero: { __typename?: 'Hero', id: number, type: string, image: string, title: string, subtitle: string, content: string }, blocks: Array<{ __typename?: 'Block', id: number, title: string, type: string, endpoint: string }> } | null };
+export type GetPageQuery = { __typename?: 'Query', page?: { __typename?: 'Page', id: number, slug: string, title: string, hero: { __typename?: 'Hero', id: number, type: string, image: string, title: string, subtitle: string, content: string }, blocks: Array<{ __typename?: 'Block', id: number, title: string, type: string, endpoint: string }> } | null };
+
+export type CreatePageMutationVariables = Exact<{
+  payload: InputPage;
+}>;
+
+
+export type CreatePageMutation = { __typename?: 'Mutation', createPage: { __typename?: 'ResponseBase', success: boolean } };
 
 export type GetProjectQueryVariables = Exact<{
   slug: Scalars['String']['input'];
@@ -533,7 +580,7 @@ export type GetProjectQuery = { __typename?: 'Query', project?: { __typename?: '
 export type GetTagsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTagsQuery = { __typename?: 'Query', tags: Array<{ __typename?: 'Tag', id: number, slug: string, title: string, image: string, content: string }> };
+export type GetTagsQuery = { __typename?: 'Query', getTags: Array<{ __typename?: 'Tag', id: number, slug: string, title: string, image: string, content: string }> };
 
 export type GetTagByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];

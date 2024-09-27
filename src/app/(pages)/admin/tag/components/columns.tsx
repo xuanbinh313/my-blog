@@ -1,13 +1,12 @@
 "use client";
-import { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
 import { GetTagsQuery } from "@/app/__generated__/resolvers-types";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import Link from "next/link";
 
-export const columns: ColumnDef<GetTagsQuery["tags"][number]>[] = [
+export const columns: ColumnDef<GetTagsQuery["getTags"][number]>[] = [
   {
     id: "select",
     header: ({ table }) => (

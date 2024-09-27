@@ -5,29 +5,29 @@ export const withLogging = (
 ) => {
   return async (req: NextRequest) => {
     // Call the handler and get the response
-	console.log(req.body)
+    console.log(req.body);
     const res = await handler(req);
-	 // Extract request body
-	 let requestBody = '';
-	 try {
-	   requestBody = await req.text();
-	 } catch (error) {
-	   console.error("Error reading request body:", error);
-	 }
+    // Extract request body
+    let requestBody = "";
+    try {
+      requestBody = await req.text();
+    } catch (error) {
+      console.error("Error reading request body:", error);
+    }
     // Clone the response to avoid locking the stream
     const cloneResponse = res.clone();
-   // Extract request headers
-   const headers = Array.from(req.headers.entries())
-   .map(([key, value]) => `${key}: ${value}`)
-   .join("\n");
+    // Extract request headers
+    const headers = Array.from(req.headers.entries())
+      .map(([key, value]) => `${key}: ${value}`)
+      .join("\n");
     // Extract and log the response body
-    const outputBody = await cloneResponse.text();
+    await cloneResponse.text();
 
     // Create log items
     const logItems = [
       "Request: " + req.method,
-	  "Headers: " + headers,
-      "NextURL: " +req.nextUrl.toString(),
+      "Headers: " + headers,
+      "NextURL: " + req.nextUrl.toString(),
       "Status: " + res.status,
       "Body: " + requestBody,
     ];

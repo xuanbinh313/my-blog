@@ -3,7 +3,6 @@ import { GetPagesQuery } from "@/app/__generated__/resolvers-types";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
-import Image from "next/image";
 import Link from "next/link";
 
 export const columns: ColumnDef<GetPagesQuery["getPages"][number]>[] = [

@@ -73,7 +73,7 @@ export const columns: ColumnDef<GetBlogsQuery["blogs"][number]>[] = [
           </Link>
           <div>
             {row.original.tags.map((it) => (
-              <Badge variant="outline">{it.title}</Badge>
+              <Badge key={it.slug} variant="outline">{it.title}</Badge>
             ))}
           </div>
         </div>

@@ -42,6 +42,7 @@ export const blogs = pgTable("blogs", {
   summary: text("summary").notNull(),
   content: text("content").notNull(),
   published: boolean("published").notNull().default(false),
+  publishedAt: timestamp("publishedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt"),
 });
@@ -62,6 +63,8 @@ export const pages = pgTable("pages", {
   slug: text("slug").unique().notNull(),
   title: text("title").notNull(),
   hero: integer("hero_id").references(() => heros.id),
+  published: boolean("published").notNull().default(false),
+  publishedAt: timestamp("publishedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt"),
 });

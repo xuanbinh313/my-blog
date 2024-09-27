@@ -54,5 +54,5 @@ export class Project {
   updatedDate!: string;
 
   @Field(() => Boolean)
-  published: Boolean = false;
+  published: boolean = false;
 }

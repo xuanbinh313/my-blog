@@ -4,13 +4,26 @@ query getBlogs {
     title
     slug
     summary
+    publishedAt
     tags {
       slug
       title
     }
   }
 }
-
+query getBlogsAdmin {
+  blogsAdmin {
+    image
+    title
+    slug
+    summary
+    publishedAt
+    tags {
+      slug
+      title
+    }
+  }
+}
 query blogBySlug($slug: String!) {
   blog(slug: $slug) {
     slug
@@ -24,6 +37,7 @@ query blogBySlug($slug: String!) {
       title
     }
     published
+    publishedAt
   }
 }
 
@@ -42,14 +56,6 @@ mutation createBlog($blog: InputBlog!) {
 }
 mutation updateBlog($slug: String!, $blog: InputBlog!) {
   updateBlog(slug: $slug, blog: $blog) {
-    title
-    summary
-    content
-    image
-    tags {
-      slug
-      title
-    }
-    published
+    success
   }
 }

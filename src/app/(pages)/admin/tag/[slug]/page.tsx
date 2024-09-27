@@ -1,5 +1,6 @@
 "use client";
 import { client } from "@/app/utils/api";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
+import { Check, PencilLine } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -99,7 +101,7 @@ export default function CreateUpdateTag() {
       form.reset(data?.tag);
       setImagePreview(`/assets/${data?.tag?.image}`);
     }
-  }, [data?.tag]);
+  }, [data?.tag, form]);
   const srcImage = file ? URL.createObjectURL(file) : imagePreview;
   return (
     <main className="flex flex-col gap-7 w-full">
@@ -245,26 +247,8 @@ export default function CreateUpdateTag() {
                 </FormItem>
               )}
             />
-            {/* <div className="absolute top-0 right-0">
+            <div className="absolute top-0 right-0">
               <div className="flex flex-row">
-                <FormField
-                  control={form.control}
-                  name="published"
-                  render={({ field }) => {
-                    const { value, ...rest } = field;
-                    return (
-                      <Toggle
-                        {...rest}
-                        pressed={value}
-                        onPressedChange={field.onChange}
-                        className="data-[state=on]:text-red-500"
-                        aria-label="Toggle bold"
-                      >
-                        <Stamp />
-                      </Toggle>
-                    );
-                  }}
-                />
                 <Button
                   className="rounded-full"
                   variant="outline"
@@ -279,7 +263,7 @@ export default function CreateUpdateTag() {
                   )}
                 </Button>
               </div>
-            </div> */}
+            </div>
           </form>
         </Form>
       </div>

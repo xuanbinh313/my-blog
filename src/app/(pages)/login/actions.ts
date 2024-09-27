@@ -2,8 +2,11 @@
 
 import { redirect } from "next/navigation";
 
-export default async function loginUser(formData: any) {
-  console.log(formData)
+export default async function loginUser(formData: {
+  email: string;
+  password: string;
+}) {
+  console.log(formData);
   redirect("/admin");
   // Mutate data
 }

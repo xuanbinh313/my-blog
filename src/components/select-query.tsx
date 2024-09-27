@@ -10,9 +10,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
-import { Button } from "./ui/button";
 interface SelectQueryProps {
   type: keyof typeof client;
+  /* tslint:disable-next-line */
   variables?: any; // Adjust the type as needed
   placeholder?: string;
   value?: string | number;
@@ -31,6 +31,7 @@ export const SelectQuery = ({
     queryKey: ["SelectQuery", type, variables],
     queryFn: async () => {
       const result = await client[type](variables);
+      /* tslint:disable-next-line */
       return (result as Record<string, any[]>)[type];
     },
   });
@@ -48,7 +49,7 @@ export const SelectQuery = ({
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          {data?.map((item: any) => (
+          {data?.map((item: { id: string; title: string }) => (
             <SelectItem key={item.id} value={item.id}>
               {item.title}
             </SelectItem>
@@ -58,4 +59,3 @@ export const SelectQuery = ({
     </Select>
   );
 };
-

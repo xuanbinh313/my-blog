@@ -1,5 +1,5 @@
 query getTags {
-  tags {
+  getTags {
     id
     slug
     title

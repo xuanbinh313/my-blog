@@ -5,11 +5,11 @@ import StarterKit from "@tiptap/starter-kit";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 
-const h1 = cn("prose-h1:text-3xl prose-h1:font-medium");
-const h2 = cn("prose-h2:text-2xl prose-h2:font-medium");
-const h3 = cn("prose-h3:text-lg prose-h3:font-medium");
+export const h1 = cn("prose-h1:text-3xl prose-h1:font-medium");
+export const h2 = cn("prose-h2:text-2xl prose-h2:font-medium");
+export const h3 = cn("prose-h3:text-lg prose-h3:font-medium");
 
-const base = "prose dark:prose-invert prose-base focus:outline-none max-w-none";
+export const base = "prose dark:prose-invert prose-base focus:outline-none max-w-none";
 
 interface RichTextEditorEvent {
   target: {

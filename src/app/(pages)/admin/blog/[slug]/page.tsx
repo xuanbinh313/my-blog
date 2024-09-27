@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { FancyMultiSelect, Framework } from "@/components/ui/multi-select";
+import { SelectQueryMulti } from "@/components/ui/multi-select";
 import { Toggle } from "@/components/ui/toggle";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
@@ -22,28 +22,7 @@ import { useParams } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-const FRAMEWORKS = [
-  {
-    value: "javascript",
-    label: "JavaScript",
-    id: 17,
-  },
-  {
-    value: "java",
-    label: "Java",
-    id: 19,
-  },
-  {
-    value: "python",
-    label: "Python",
-    id: 18,
-  },
-  {
-    value: "reactjs",
-    label: "ReactJS",
-    id: 20,
-  },
-];
+
 const FormSchema = z.object({
   slug: z.string().min(1, { message: "Slug is required" }),
   title: z.string().min(1, { message: "Title is required" }),
@@ -51,9 +30,10 @@ const FormSchema = z.object({
   summary: z.string().min(1, { message: "Summary is required" }),
   content: z.string().min(1, { message: "Content is required" }),
   published: z.boolean().default(false),
-  tags: z
-    .array(z.object({ id: z.number(), title: z.string(), slug: z.string() }))
-    .default([]),
+  tags: z.array(z.number(), {
+    required_error: "Block is required",
+    invalid_type_error: "Block must be a number",
+  }),
 });
 
 const uploadImage = async (file: File) => {
@@ -69,7 +49,7 @@ export default function CreateUpdateBlog() {
   const { slug } = useParams<{ slug: string }>();
   const { data } = useQuery({
     queryKey: ["blog", slug],
-    queryFn: async () => await client.blogBySlug({ slug }),
+    queryFn: async () => (await client.blogBySlug({ slug })).blog,
     enabled: !!slug && slug !== "new",
   });
   const [isEdit, setIsEdit] = useState(!(!!slug && slug !== "new"));
@@ -87,17 +67,13 @@ export default function CreateUpdateBlog() {
       tags: [],
     },
   });
-  // TODO: Test again
-  form.watch("tags");
   const onSubmit = async (blog: z.infer<typeof FormSchema>) => {
     // TODO: submit here
-    console.log("update");
     if (file) {
       await uploadImage(file);
     }
-    const tags = blog.tags.map((it) => it.id);
-    if (data?.blog?.image) {
-      client.updateBlog({ slug, blog: { ...blog, tags } });
+    if (data?.image) {
+      client.updateBlog({ slug, blog });
     }
   };
   const handleSubmit = () => {
@@ -109,12 +85,14 @@ export default function CreateUpdateBlog() {
     }
   };
   useEffect(() => {
-    if (data?.blog) {
-      form.reset(data?.blog);
-      setImagePreview(`/assets/${data?.blog?.image}`);
+    if (data) {
+      form.reset({
+        ...data,
+        tags: data.tags.map((b) => Number(b.id)),
+      });
+      setImagePreview(`/assets/${data?.image}`);
     }
-  }, [data?.blog]);
-  // console.log("ERRORS", form.formState.errors, form.getValues());
+  }, [data, form]);
   const srcImage = file ? URL.createObjectURL(file) : imagePreview;
   return (
     <main className="flex flex-col gap-7 w-full">
@@ -149,7 +127,9 @@ export default function CreateUpdateBlog() {
               name="summary"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-muted-foreground">Summary</FormLabel>
+                  <FormLabel className="text-muted-foreground">
+                    Summary
+                  </FormLabel>
                   <FormControl className="dark:bg-zinc-700 bg-secondary">
                     <Input
                       className="rounded-xl px-4 py-5"
@@ -167,25 +147,13 @@ export default function CreateUpdateBlog() {
               control={form.control}
               name="tags"
               render={({ field }) => {
-                const handleSelected = (selected: Framework[]) => {
-                  field.onChange(
-                    selected.map((it) => ({
-                      title: it.label,
-                      slug: it.value,
-                      id: it.id,
-                    }))
-                  );
-                };
-                const value = field.value.map((it) => ({
-                  label: it.title,
-                  value: it.slug,
-                  id: it.id,
-                }));
                 return (
-                  <FancyMultiSelect
-                    onSelectedChange={handleSelected}
-                    selected={value}
-                    options={FRAMEWORKS}
+                  <SelectQueryMulti
+                    type="getTags"
+                    nameValue="id"
+                    typeValue="number"
+                    selected={field.value}
+                    onSelectedChange={field.onChange}
                   />
                 );
               }}

@@ -4,6 +4,7 @@ import { db } from "@/db/drizzle";
 import { blogs, blogTags, techs } from "@/db/schema";
 import { eq, sql } from "drizzle-orm";
 import { Blog, InputBlog } from "./blogs.schema";
+import { ResponseBase } from "./common.schema";
 
 @Resolver(Blog)
 export class BlogsResolver {
@@ -29,6 +30,28 @@ export class BlogsResolver {
       .select()
       .from(blogTags)
       .leftJoin(techs, eq(blogTags.tagId, techs.id))
+      .rightJoin(blogs, eq(blogTags.blogId, blogs.id)).where(eq(blogs.published, true));
+
+    const data = blogTagsData.reduce<Record<number, Blog>>((pre, curr) => {
+      const tag = curr.tags;
+      const blog = curr.blogs;
+      if (!pre[blog.id]) {
+        pre[blog.id] = { ...blog, tags: tag ? [tag] : [] };
+      }
+      if (pre[blog.id] && tag) {
+        pre[blog.id].tags.push(tag);
+      }
+      return pre;
+    }, {});
+      console.log("result--------------------", Object.values(data));
+    return Object.values(data);
+  }
+  @Query(() => [Blog])
+  async blogsAdmin(): Promise<Blog[]> {
+    const blogTagsData = await db
+      .select()
+      .from(blogTags)
+      .leftJoin(techs, eq(blogTags.tagId, techs.id))
       .rightJoin(blogs, eq(blogTags.blogId, blogs.id));
 
     const data = blogTagsData.reduce<Record<number, Blog>>((pre, curr) => {
@@ -42,9 +65,9 @@ export class BlogsResolver {
       }
       return pre;
     }, {});
+      console.log("result--------------------", Object.values(data));
     return Object.values(data);
   }
-
   @Mutation(() => Blog)
   async createBlog(@Arg("blog") blog: InputBlog): Promise<Blog> {
     const result = await db
@@ -54,11 +77,11 @@ export class BlogsResolver {
     return result[0] as Blog;
   }
 
-  @Mutation(() => Blog)
+  @Mutation(() => ResponseBase)
   async updateBlog(
     @Arg("slug") slug: string,
     @Arg("blog") blog: InputBlog
-  ): Promise<Blog> {
+  ): Promise<ResponseBase> {
     const [blogsDB] = await db.select().from(blogs).where(eq(blogs.slug, slug));
     if (!blogsDB) {
       throw new Error("Blog not found");
@@ -82,8 +105,15 @@ export class BlogsResolver {
           newTagsToInsert.map((tagId) => ({ blogId: blogsDB.id, tagId }))
         );
     }
-    await db.execute(sql`DELETE FROM ${blogTags} WHERE ${blogTags.blogId} = ${sql.raw(blogsDB.id.toString())} AND ${blogTags.tagId} NOT IN (${sql.raw(blog.tags.join(","))})`);
-    await db.update(blogs).set(blog).where(eq(blogs.slug, slug));
-    return { ...blogsDB, tags:[] };
+    await db.execute(
+      sql`DELETE FROM ${blogTags} WHERE ${blogTags.blogId} = ${sql.raw(
+        blogsDB.id.toString()
+      )} AND ${blogTags.tagId} NOT IN (${sql.raw(blog.tags.join(","))})`
+    );
+    const result = blog.published
+      ? { ...blog, publishedAt: sql`now()` }
+      : blog;
+     await db.update(blogs).set(result).where(eq(blogs.slug, slug)).returning()
+    return { success: true };
   }
 }

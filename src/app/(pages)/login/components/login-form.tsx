@@ -31,9 +31,7 @@ const FormSchema = z.object({
     message: "Password must be at least 6 characters.",
   }),
 });
-const initialState = {
-  message: '',
-}
+
 export default function LoginForm() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),

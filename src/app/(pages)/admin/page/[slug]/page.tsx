@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Framework, SelectQueryMulti } from "@/components/ui/multi-select";
+import { SelectQueryMulti } from "@/components/ui/multi-select";
 import { Toggle } from "@/components/ui/toggle";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
@@ -25,7 +25,7 @@ const FormSchema = z.object({
   slug: z.string().min(1, { message: "Slug is required" }),
   title: z.string().min(1, { message: "Title is required" }),
   published: z.boolean().default(false),
-  hero: z.number({
+  heroId: z.number({
     required_error: "Hero is required",
     invalid_type_error: "Hero must be a number",
   }),
@@ -52,7 +52,7 @@ export default function CreateUpdatePage() {
     defaultValues: {
       slug: "",
       title: "",
-      hero: undefined,
+      heroId: undefined,
       published: false,
       blocks: [],
     },
@@ -61,16 +61,16 @@ export default function CreateUpdatePage() {
   const onSubmit = async (page: z.infer<typeof FormSchema>) => {
     console.log("tag", page);
 
-    // if (slug === "new") {
-    //   try {
-    //     const res = await client.createTag({ payload: tag });
-    //     if (res.createTag.success) {
-    //       router.push(`/admin/tag`);
-    //     }
-    //   } catch (error) {
-    //     console.log("ERROR", error);
-    //   }
-    // }
+    if (id === "new") {
+      try {
+        const res = await client.createPage({ payload: page });
+        if (res.createPage.success) {
+          router.push(`/admin/page`);
+        }
+      } catch (error) {
+        console.log("ERROR", error);
+      }
+    }
     // try {
     //   const res = await client.updateTag({ id: Number(id), payload: tag });
     //   if (res.updateTag.success) {
@@ -92,12 +92,12 @@ export default function CreateUpdatePage() {
     if (data) {
       form.reset({
         ...data,
-        hero: data.hero.id,
-        blocks: data.blocks.map((b) => b.id),
+        heroId: data.hero.id,
+        blocks: data.blocks.map((b) => Number(b.id)),
       });
     }
-  }, [data]);
-  console.log("ERRORS", form.formState.errors, form.getValues());
+  }, [data, form]);
+  // console.log("ERRORS", form.formState.errors, form.getValues());
   return (
     <main className="flex flex-col gap-7 w-full">
       <div className="bg-destructive rounded-lg px-10 py-7 relative ">
@@ -147,7 +147,7 @@ export default function CreateUpdatePage() {
             />
             <FormField
               control={form.control}
-              name="hero"
+              name="heroId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-muted-foreground">Hero</FormLabel>

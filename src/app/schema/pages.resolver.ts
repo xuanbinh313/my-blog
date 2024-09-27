@@ -1,9 +1,10 @@
 import { Resolver, Query, Arg, Mutation } from "type-graphql";
 
-import { Page, PageAdmin } from "./pages.schema";
+import { InputPage, Page, PageAdmin } from "./pages.schema";
 import { db } from "@/db/drizzle";
 import { eq, sql } from "drizzle-orm";
 import { blocks, heros, pageBlocks, pages } from "@/db/schema";
+import { ResponseBase } from "./common.schema";
 
 @Resolver(Page)
 export class PagesResolver {
@@ -20,14 +21,12 @@ export class PagesResolver {
       throw new Error("Page not found");
     }
     const { pages: pagesRes, heros: herosRes } = page[0];
-    // const page = pagesData.find((page) => page.published && page.slug === slug);
     const pageBlocksData = await db
       .select()
       .from(pageBlocks)
       .innerJoin(blocks, eq(pageBlocks.blockId, blocks.id))
       .where(eq(pageBlocks.pageId, pagesRes.id))
       .orderBy(pageBlocks.position);
-
     return {
       ...pagesRes,
       hero: {
@@ -39,12 +38,14 @@ export class PagesResolver {
         content: herosRes.content,
       },
       blocks: pageBlocksData.map(({ blocks }) => ({
+        id: blocks.id,
         type: blocks.type,
         title: blocks.title,
         endpoint: blocks.endpoint, // or any other field you want to use
       })),
       createdDate: pagesRes.createdAt,
       updatedDate: pagesRes.updatedAt, // Make sure to add updatedAt field to schema if you need it
+      publishedAt: pagesRes.publishedAt, // Make sure to add updatedAt field to schema if you need it
     };
   }
 
@@ -56,13 +57,33 @@ export class PagesResolver {
     return result.rows as unknown as PageAdmin[]
   }
   
-  @Mutation(() => PageAdmin)
-  async createPage(): Promise<PageAdmin> {
+  @Mutation(() => ResponseBase)
+  async createPage(
+    @Arg("payload") payload: InputPage
+  ): Promise<ResponseBase> {
     const result = await db.execute(sql`
-      INSERT INTO ${pages} (slug, title, hero_id)
-      VALUES ('new-page', 'New Page', 1)
+      INSERT INTO ${pages} (slug, title, hero_id, published)
+      VALUES (${payload.slug}, ${payload.title}, ${payload.heroId}, ${payload.published})
       RETURNING id, slug, title, hero_id
     `);
-    return result.rows[0] as PageAdmin;
+    const pageId = result.rows[0].id;
+    const chunkValues = payload.blocks.map((blockId, index) => `(${pageId+""}, ${blockId+""}, ${index+1})`).join(", ");
+    await db.execute(sql`INSERT INTO ${pageBlocks} (page_id, block_id, position) VALUES ${sql.raw(chunkValues)}`);
+    return { success: true };
   }
+
+  // @Mutation(() => PageAdmin)
+  // async updatePage(
+  //   @Arg("slug") slug: string,
+  //   @Arg("page") page: PageAdmin
+  // ): Promise<PageAdmin> {
+  //   console.log("UPDATE PAGE ----------------------------------", slug, page);
+  //   // const result = await db.execute(sql`
+  //   //   INSERT INTO ${pages} (slug, title, hero_id)
+  //   //   VALUES (${page.slug}, ${page.title}, ${page.heroId})
+  //   //   RETURNING id, slug, title, hero_id
+  //   // `);
+  //   // return result.rows[0] as unknown as PageAdmin;
+  //   return {} as unknown as PageAdmin;
+  // }
 }

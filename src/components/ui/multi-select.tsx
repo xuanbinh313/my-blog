@@ -31,9 +31,12 @@ export function FancyMultiSelect({
   const [open, setOpen] = React.useState(false);
   const [inputValue, setInputValue] = React.useState("");
 
-  const handleUnselect = React.useCallback((framework: Framework) => {
-    onSelectedChange(selected.filter((s) => s.value !== framework.value));
-  }, []);
+  const handleUnselect = React.useCallback(
+    (framework: Framework) => {
+      onSelectedChange(selected.filter((s) => s.value !== framework.value));
+    },
+    [onSelectedChange, selected]
+  );
 
   const handleKeyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -43,7 +46,6 @@ export function FancyMultiSelect({
           if (input.value === "") {
             const newSelected = [...selected];
             newSelected.pop();
-            console.log(newSelected, selected);
             onSelectedChange(newSelected);
           }
         }
@@ -53,7 +55,7 @@ export function FancyMultiSelect({
         }
       }
     },
-    [selected]
+    [selected, onSelectedChange]
   );
 
   const selectables = options.filter(
@@ -114,7 +116,7 @@ export function FancyMultiSelect({
                         e.preventDefault();
                         e.stopPropagation();
                       }}
-                      onSelect={(value) => {
+                      onSelect={() => {
                         setInputValue("");
                         onSelectedChange([...selected, framework]);
                       }}
@@ -134,6 +136,7 @@ export function FancyMultiSelect({
 }
 interface SelectQueryProps {
   type: keyof typeof client;
+  /* tslint:disable-next-line */
   variables?: any; // Adjust the type as needed
   placeholder?: string;
   selected: (number | string | undefined)[];
@@ -155,9 +158,11 @@ export function SelectQueryMulti({
     queryKey: ["SelectQueryMulti", type, variables],
     queryFn: async () => {
       const result = await client[type](variables);
+      /* tslint:disable-next-line */
       return (result as Record<string, any[]>)[type];
     },
   });
+  console.log("selected", selected);
   const handleSelected = (val: Framework[]) => {
     onSelectedChange &&
       onSelectedChange(
