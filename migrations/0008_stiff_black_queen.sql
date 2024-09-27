@@ -1,1 +1,0 @@
-ALTER TABLE "tags" ADD COLUMN "link" text;
