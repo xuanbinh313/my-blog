@@ -1,15 +1,15 @@
-import { logger } from "./../../../lib/logger";
-import { ApolloServer } from "@apollo/server";
-import { startServerAndCreateNextHandler } from "@as-integrations/next";
 import "reflect-metadata";
-import { buildSchema } from "type-graphql";
+import { BlockResolver } from "@/app/schema/blocks.resolver";
 import { BlogsResolver } from "@/app/schema/blogs.resolver";
 import { HeadersResolver } from "@/app/schema/headers.resolver";
+import { HeroResolver } from "@/app/schema/heros.resolver";
 import { PagesResolver } from "@/app/schema/pages.resolver";
 import { ProjectsResolver } from "@/app/schema/projects.resolver";
 import { TagsResolver } from "@/app/schema/tags.resolver";
-import { HeroResolver } from "@/app/schema/heros.resolver";
-import { BlockResolver } from "@/app/schema/blocks.resolver";
+import { ApolloServer } from "@apollo/server";
+import { startServerAndCreateNextHandler } from "@as-integrations/next";
+import { buildSchema } from "type-graphql";
+import { logger } from "./../../../lib/logger";
 
 const schema = await buildSchema({
   resolvers: [
@@ -27,11 +27,10 @@ const schema = await buildSchema({
 // Initialize Apollo Server
 const apolloServer = new ApolloServer({
   schema,
-
   plugins: [
     {
       // Apollo Server plugin for logging GraphQL requests and responses
-      async requestDidStart(requestContext) {
+      async requestDidStart() {
         // Log incoming request
         // logger.info(
         //   `Received GraphQL request: ${requestContext.request.operationName}`
@@ -69,3 +68,5 @@ const apolloServer = new ApolloServer({
 const handler = startServerAndCreateNextHandler(apolloServer);
 
 export { handler as GET, handler as POST };
+
+
